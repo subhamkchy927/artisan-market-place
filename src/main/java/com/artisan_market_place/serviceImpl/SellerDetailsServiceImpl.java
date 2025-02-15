@@ -8,6 +8,10 @@ import com.artisan_market_place.service.SellerDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 @Service
 public class SellerDetailsServiceImpl implements SellerDetailsService {
 
@@ -18,29 +22,47 @@ public class SellerDetailsServiceImpl implements SellerDetailsService {
     public SellerResponseDto createSeller(SellerRequestDto dto) {
         SellerDetails sellerDetails = setSellerDetails(dto);
         sellerRepository.save(sellerDetails);
-        SellerResponseDto response = getSellerDetails(sellerDetails);
-        return response;
+        return getSellerDetails(sellerDetails);
     }
 
     @Override
     public SellerResponseDto updateSeller(SellerRequestDto dto, Long sellerId) {
+        Optional<SellerDetails> optionalSeller = sellerRepository.findById(sellerId);
+        if (optionalSeller.isPresent()) {
+            SellerDetails sellerDetails = optionalSeller.get();
+            sellerDetails = setSellerDetails(dto);
+            sellerRepository.save(sellerDetails);
+            return getSellerDetails(sellerDetails);
+        }
         return null;
     }
 
     @Override
     public SellerResponseDto getSellerById(Long sellerId) {
+        Optional<SellerDetails> optionalSeller = sellerRepository.findById(sellerId);
+        return optionalSeller.map(this::getSellerDetails).orElse(null);
+    }
+
+    @Override
+    public SellerResponseDto deleteSeller(Long sellerId) {
+        Optional<SellerDetails> optionalSeller = sellerRepository.findById(sellerId);
+        if (optionalSeller.isPresent()) {
+            SellerDetails sellerDetails = optionalSeller.get();
+            sellerRepository.delete(sellerDetails);
+            return getSellerDetails(sellerDetails);
+        }
         return null;
     }
 
     @Override
-    public SellerResponseDto cdeleteSeller(Long sellerId) {
-        return null;
+    public List<SellerResponseDto> getAllSeller(Boolean isApplicationAdmin) {
+        List<SellerDetails> sellers = sellerRepository.findAll();
+        return sellers.stream()
+                .filter(seller -> isApplicationAdmin == null || seller.getIsApplicationAdmin().equals(isApplicationAdmin))
+                .map(this::getSellerDetails)
+                .collect(Collectors.toList());
     }
 
-    @Override
-    public SellerResponseDto getAllSeller(Boolean isApplicationAdmin) {
-        return null;
-    }
 
     private SellerDetails setSellerDetails(SellerRequestDto dto) {
         SellerDetails sellerDetails = new SellerDetails();
