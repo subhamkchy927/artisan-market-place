@@ -1,0 +1,21 @@
+
+CREATE DATABASE artisan_market_place;
+
+CREATE TABLE seller_details (
+    seller_id INT AUTO_INCREMENT PRIMARY KEY,
+    seller_first_name VARCHAR(32) NOT NULL,
+    seller_middle_name VARCHAR(32) NOT NULL,
+    seller_last_name VARCHAR(32) NOT NULL,
+    email VARCHAR(64) NOT NULL UNIQUE,
+    country_code VARCHAR(8),
+    phone_number VARCHAR(16) NOT NULL UNIQUE,
+    company_name VARCHAR(128),
+    gst_number VARCHAR(32),
+    status VARCHAR(16),
+    seller_rating DECIMAL(2,1),
+    is_application_admin  BOOLEAN,
+    creation_date DATETIME NOT NULL,
+    created_by VARCHAR(128),
+    last_update_date DATETIME NOT NULL,
+    last_updated_by VARCHAR(128)
+);

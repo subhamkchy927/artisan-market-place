@@ -1,0 +1,42 @@
+spring.profiles.active: local
+spring.jackson.time-zone: America/Los_Angeles
+# HTTP Server
+server:
+   port: 8080
+   compression.enabled: true
+   tomcat.max-http-post-size:   10485760
+   tomcat.max-max-swallow-size: 10485760
+
+# log level entries
+logging:
+   level:
+      org.hibernate: INFO
+      io.swagger: INFO
+      org.apache.coyote.http11.Http11InputBuffer: DEBUG
+      org.springframework.security: DEBUG
+      com.vhub.sts: DEBUG
+
+
+# mysql connector details
+spring:
+   datasource:
+      username: root
+      password: root
+      url: jdbc:mysql://localhost/vhub2_dev_1
+      driver-class-name: com.mysql.cj.jdbc.Driver
+
+   jpa:
+      properties:
+         hibernate:
+            dialect: org.hibernate.dialect.MySQL8Dialect
+            ddl-auto: none
+            naming_strategy: org.hibernate.cfg.ImprovedNamingStrategy
+      show-sql: true
+      database: mysql
+
+
+
+
+
+
+
