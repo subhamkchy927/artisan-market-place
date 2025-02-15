@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -43,10 +44,10 @@ public class SellerController {
     }
 
     @DeleteMapping("/{sellerId}")
-    public ResponseEntity<SellerResponseDto> deleteSeller(@PathVariable Long sellerId) {
+    public ResponseEntity<HashMap<String,String>> deleteSeller(@PathVariable Long sellerId) {
         log.info("Request to delete seller with ID: {}", sellerId);
-        SellerResponseDto response = sellerService.deleteSeller(sellerId);
-        return response != null ? ResponseEntity.ok(response) : ResponseEntity.notFound().build();
+        HashMap<String,String> response = sellerService.deleteSeller(sellerId);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/")

@@ -8,6 +8,7 @@ import com.artisan_market_place.service.SellerDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -44,14 +45,16 @@ public class SellerDetailsServiceImpl implements SellerDetailsService {
     }
 
     @Override
-    public SellerResponseDto deleteSeller(Long sellerId) {
+    public HashMap<String, String> deleteSeller(Long sellerId) {
+        HashMap<String, String> response = new HashMap<>();
         Optional<SellerDetails> optionalSeller = sellerRepository.findById(sellerId);
         if (optionalSeller.isPresent()) {
             SellerDetails sellerDetails = optionalSeller.get();
             sellerRepository.delete(sellerDetails);
-            return getSellerDetails(sellerDetails);
         }
-        return null;
+        response.put("Seller Id", sellerId.toString());
+        response.put("Status", "Success");
+        return response;
     }
 
     @Override
