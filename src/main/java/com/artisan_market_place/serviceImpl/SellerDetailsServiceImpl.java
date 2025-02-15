@@ -75,11 +75,4 @@ public class SellerDetailsServiceImpl implements SellerDetailsService {
         responseDto.setIsApplicationAdmin(sellerDetails.getIsApplicationAdmin());
         return responseDto;
     }
-//    git init
-//    git add README.md
-//    git commit -m "first commit"
-//    git branch -M main
-//    git remote add origin https://github.com/subhamkchy927/artisan-market-place.git
-//    git push -u origin main
-//
 }
