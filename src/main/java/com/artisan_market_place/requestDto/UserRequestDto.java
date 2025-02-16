@@ -1,10 +1,9 @@
-package com.artisan_market_place.responseDto;
-
+package com.artisan_market_place.requestDto;
+import jakarta.persistence.Column;
 import lombok.Data;
 
 @Data
-public class SellerResponseDto {
-    private int sellerId;
+public class UserRequestDto {
     private String sellerFirstName;
     private String sellerMiddleName;
     private String sellerLastName;
@@ -13,7 +12,9 @@ public class SellerResponseDto {
     private String companyName;
     private String gstNumber;
     private String status;
-    private String countryCode;
     private String sellerRating;
+    private String countryCode;
     private Boolean isApplicationAdmin;
+    private String password;
+    private String userRole;
 }
