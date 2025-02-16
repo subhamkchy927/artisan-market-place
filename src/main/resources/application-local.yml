@@ -17,4 +17,8 @@ spring:
     show-sql: true
     database: mysql
 
+    jwt:
+      secret: mySuperSecretKey09012000
+      expiration: 86400000
+
 

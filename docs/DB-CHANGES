@@ -14,6 +14,8 @@ CREATE TABLE seller_details (
     status VARCHAR(16),
     seller_rating DECIMAL(2,1),
     is_application_admin  BOOLEAN,
+    password  VARCHAR(32),
+    user_role  VARCHAR(32),
     creation_date DATETIME NOT NULL,
     created_by VARCHAR(128),
     last_update_date DATETIME NOT NULL,

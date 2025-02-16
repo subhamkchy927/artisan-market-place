@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 @Table(name = "seller_details")
 @Entity
-public class SellerDetails extends BaseEntity{
+public class UserDetails extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "seller_id")
@@ -44,4 +44,10 @@ public class SellerDetails extends BaseEntity{
 
     @Column(name = "country_code")
     private String countryCode;
+
+    @Column(name = "password")
+    private String password;
+
+    @Column(name = "user_role")
+    private String userRole;
 }
