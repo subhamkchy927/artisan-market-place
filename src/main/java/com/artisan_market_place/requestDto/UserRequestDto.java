@@ -4,9 +4,9 @@ import lombok.Data;
 
 @Data
 public class UserRequestDto {
-    private String sellerFirstName;
-    private String sellerMiddleName;
-    private String sellerLastName;
+    private String firstName;
+    private String middleName;
+    private String lastName;
     private String email;
     private String phoneNumber;
     private String companyName;

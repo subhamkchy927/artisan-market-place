@@ -1,13 +1,11 @@
 package com.artisan_market_place.repository;
 
-import com.artisan_market_place.entity.UserDetails;
+import com.artisan_market_place.entity.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
-
 @Repository
-public interface UserRepository extends JpaRepository<UserDetails, Long> {
+public interface UserRepository extends JpaRepository<Users, Long> {
 
-    UserDetails findByEmail(String username);
+    Users findByEmail(String username);
 }

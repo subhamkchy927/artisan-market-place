@@ -4,18 +4,17 @@ import lombok.Data;
 
 @Data
 public class UserResponseDto {
-    private int sellerId;
-    private String sellerFirstName;
-    private String sellerMiddleName;
-    private String sellerLastName;
+    private Long sellerId;
+    private String firstName;
+    private String middleName;
+    private String lastName;
     private String email;
     private String phoneNumber;
     private String companyName;
     private String gstNumber;
     private String status;
     private String countryCode;
-    private String sellerRating;
+    private String rating;
     private Boolean isApplicationAdmin;
-    private String password;
     private String userRole;
 }
