@@ -1,23 +1,35 @@
 
 CREATE DATABASE artisan_market_place;
 
-CREATE TABLE seller_details (
-    seller_id INT AUTO_INCREMENT PRIMARY KEY,
-    seller_first_name VARCHAR(32) NOT NULL,
-    seller_middle_name VARCHAR(32) NOT NULL,
-    seller_last_name VARCHAR(32) NOT NULL,
-    email VARCHAR(64) NOT NULL UNIQUE,
-    country_code VARCHAR(8),
+CREATE TABLE user_details (
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(32) NOT NULL,
+    middle_name VARCHAR(32) NOT NULL,
+    last_name VARCHAR(32) NOT NULL,
+    email VARCHAR(128) NOT NULL UNIQUE,
     phone_number VARCHAR(16) NOT NULL UNIQUE,
     company_name VARCHAR(128),
     gst_number VARCHAR(32),
-    status VARCHAR(16),
-    seller_rating DECIMAL(2,1),
-    is_application_admin  BOOLEAN,
-    password  VARCHAR(32),
-    user_role  VARCHAR(32),
+    status VARCHAR(16) NOT NULL,
+    rating VARCHAR(16),
+    is_admin BOOLEAN,
+    country_code VARCHAR(8),
+    role VARCHAR(32),
     creation_date DATETIME NOT NULL,
     created_by VARCHAR(128),
     last_update_date DATETIME NOT NULL,
     last_updated_by VARCHAR(128)
+);
+
+
+CREATE TABLE user_login_info (
+    login_info_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    login_id VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    creation_date DATETIME NOT NULL,
+    created_by VARCHAR(128),
+    last_update_date DATETIME NOT NULL,
+    last_updated_by VARCHAR(128),
+    FOREIGN KEY (user_id) REFERENCES user_details(user_id)
 );

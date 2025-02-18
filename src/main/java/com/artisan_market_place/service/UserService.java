@@ -9,9 +9,9 @@ import java.util.List;
 
 @Service
 public interface UserService {
-    public UserResponseDto createSeller(UserRequestDto dto);
-    public UserResponseDto updateSeller(UserRequestDto dto, Long sellerId);
-    public UserResponseDto getSellerById(Long sellerId);
-    public HashMap<String,String> deleteSeller(Long sellerId);
-    public List<UserResponseDto> getAllSeller(Boolean isApplicationAdmin);
+    public UserResponseDto createUser(UserRequestDto dto);
+    public UserResponseDto updateUser(UserRequestDto dto, Long sellerId);
+    public UserResponseDto getUserById(Long sellerId);
+    public HashMap<String,String> deleteUser(Long sellerId);
+    public List<UserResponseDto> getAllUser(Boolean isApplicationAdmin);
 }

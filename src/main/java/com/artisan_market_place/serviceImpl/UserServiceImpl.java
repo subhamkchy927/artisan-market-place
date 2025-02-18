@@ -1,12 +1,17 @@
 package com.artisan_market_place.serviceImpl;
 
-import com.artisan_market_place.entity.UserDetails;
+import com.artisan_market_place.entity.Users;
+import com.artisan_market_place.entity.UsersLoginInfo;
+import com.artisan_market_place.repository.LoginUserRepository;
 import com.artisan_market_place.repository.UserRepository;
 import com.artisan_market_place.requestDto.UserRequestDto;
 import com.artisan_market_place.responseDto.UserResponseDto;
 import com.artisan_market_place.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,42 +20,50 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
+    private final UserRepository userRepository;
+    private final LoginUserRepository usersLoginInfoRepository;
 
     @Autowired
-    UserRepository sellerRepository;
-
-    @Override
-    public UserResponseDto createSeller(UserRequestDto dto) {
-        UserDetails userDetails = setSellerDetails(dto);
-        sellerRepository.save(userDetails);
-        return getSellerDetails(userDetails);
+    PasswordEncoder encoder;
+    public UserServiceImpl(UserRepository userRepository, LoginUserRepository usersLoginInfoRepository) {
+        this.userRepository = userRepository;
+        this.usersLoginInfoRepository = usersLoginInfoRepository;
     }
 
     @Override
-    public UserResponseDto updateSeller(UserRequestDto dto, Long sellerId) {
-        Optional<UserDetails> optionalSeller = sellerRepository.findById(sellerId);
+    public UserResponseDto createUser(UserRequestDto dto) {
+        Users users = setSellerDetails(dto);
+        userRepository.saveAndFlush(users);
+        setLoginInfo(users.getUserId(),dto);
+        return getSellerDetails(users);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Throwable.class)
+    public UserResponseDto updateUser(UserRequestDto dto, Long sellerId) {
+        Optional<Users> optionalSeller = userRepository.findById(sellerId);
         if (optionalSeller.isPresent()) {
-            UserDetails userDetails = optionalSeller.get();
-            userDetails = setSellerDetails(dto);
-            sellerRepository.save(userDetails);
-            return getSellerDetails(userDetails);
+            Users users = optionalSeller.get();
+            users = setSellerDetails(dto);
+            userRepository.save(users);
+            return getSellerDetails(users);
         }
         return null;
     }
 
     @Override
-    public UserResponseDto getSellerById(Long sellerId) {
-        Optional<UserDetails> optionalSeller = sellerRepository.findById(sellerId);
+    public UserResponseDto getUserById(Long sellerId) {
+        Optional<Users> optionalSeller = userRepository.findById(sellerId);
         return optionalSeller.map(this::getSellerDetails).orElse(null);
     }
 
     @Override
-    public HashMap<String, String> deleteSeller(Long sellerId) {
+    public HashMap<String, String> deleteUser(Long sellerId) {
         HashMap<String, String> response = new HashMap<>();
-        Optional<UserDetails> optionalSeller = sellerRepository.findById(sellerId);
+        Optional<Users> optionalSeller = userRepository.findById(sellerId);
         if (optionalSeller.isPresent()) {
-            UserDetails userDetails = optionalSeller.get();
-            sellerRepository.delete(userDetails);
+            Users users = optionalSeller.get();
+            userRepository.delete(users);
         }
         response.put("Seller Id", sellerId.toString());
         response.put("Status", "Success");
@@ -58,50 +71,54 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserResponseDto> getAllSeller(Boolean isApplicationAdmin) {
-        List<UserDetails> sellers = sellerRepository.findAll();
+    public List<UserResponseDto> getAllUser(Boolean isApplicationAdmin) {
+        List<Users> sellers = userRepository.findAll();
         return sellers.stream()
-                .filter(seller -> isApplicationAdmin == null || seller.getIsApplicationAdmin().equals(isApplicationAdmin))
+                .filter(seller -> isApplicationAdmin == null || seller.getIsAdmin().equals(isApplicationAdmin))
                 .map(this::getSellerDetails)
                 .collect(Collectors.toList());
     }
 
 
-    private UserDetails setSellerDetails(UserRequestDto dto) {
-        UserDetails userDetails = new UserDetails();
-        userDetails.setSellerFirstName(dto.getSellerFirstName());
-        userDetails.setSellerMiddleName(dto.getSellerMiddleName());
-        userDetails.setSellerLastName(dto.getSellerLastName());
-        userDetails.setEmail(dto.getEmail());
-        userDetails.setPhoneNumber(dto.getPhoneNumber());
-        userDetails.setCompanyName(dto.getCompanyName());
-        userDetails.setGstNumber(dto.getGstNumber());
-        userDetails.setStatus(dto.getStatus());
-        userDetails.setSellerRating(dto.getSellerRating());
-        userDetails.setIsApplicationAdmin(dto.getIsApplicationAdmin());
-        userDetails.setCountryCode(dto.getCountryCode());
-        userDetails.setPassword(dto.getPassword());
-        userDetails.setCountryCode(dto.getUserRole());
-        userDetails.setAuditInfo("system");
-        return userDetails;
+    private Users setSellerDetails(UserRequestDto dto) {
+        Users users = new Users();
+        users.setFirirstName(dto.getFirstName());
+        users.setMiddleName(dto.getMiddleName());
+        users.setLastName(dto.getLastName());
+        users.setPhoneNumber(dto.getPhoneNumber());
+        users.setCompanyName(dto.getCompanyName());
+        users.setGstNumber(dto.getGstNumber());
+        users.setEmail(dto.getEmail());
+        users.setStatus(dto.getStatus());
+        users.setRating(dto.getSellerRating());
+        users.setIsAdmin(dto.getIsApplicationAdmin());
+        users.setCountryCode(dto.getCountryCode());
+        users.setRole(dto.getUserRole());
+        users.setAuditInfo("system");
+        return users;
     }
 
-    private UserResponseDto getSellerDetails(UserDetails userDetails) {
+    public void setLoginInfo(Long userId, UserRequestDto dto){
+        UsersLoginInfo loginInfo = new UsersLoginInfo();
+        loginInfo.setUserId(1L);
+        loginInfo.setLoginId(dto.getEmail());
+        loginInfo.setPassword(encoder.encode(dto.getPassword()));
+        loginInfo.setAuditInfo("system");
+        usersLoginInfoRepository.saveAndFlush(loginInfo);
+    }
+
+    private UserResponseDto getSellerDetails(Users user) {
         UserResponseDto responseDto = new UserResponseDto();
-        responseDto.setSellerId(userDetails.getSellerId());
-        responseDto.setSellerFirstName(userDetails.getSellerFirstName());
-        responseDto.setSellerMiddleName(userDetails.getSellerMiddleName());
-        responseDto.setSellerLastName(userDetails.getSellerLastName());
-        responseDto.setEmail(userDetails.getEmail());
-        responseDto.setPhoneNumber(userDetails.getPhoneNumber());
-        responseDto.setCompanyName(userDetails.getCompanyName());
-        responseDto.setGstNumber(userDetails.getGstNumber());
-        responseDto.setStatus(userDetails.getStatus());
-        responseDto.setSellerRating(userDetails.getSellerRating());
-        responseDto.setCountryCode(userDetails.getCountryCode());
-        responseDto.setIsApplicationAdmin(userDetails.getIsApplicationAdmin());
-        responseDto.setPassword(userDetails.getPassword());
-        responseDto.setCountryCode(userDetails.getUserRole());
+        responseDto.setFirstName(user.getFirirstName());
+        responseDto.setMiddleName(user.getMiddleName());
+        responseDto.setLastName(user.getLastName());
+        responseDto.setPhoneNumber(user.getPhoneNumber());
+        responseDto.setCompanyName(user.getCompanyName());
+        responseDto.setGstNumber(user.getGstNumber());
+        responseDto.setStatus(user.getStatus());
+        responseDto.setRating(user.getRating());
+        responseDto.setIsApplicationAdmin(user.getIsAdmin());
+        responseDto.setCountryCode(user.getCountryCode());
         return responseDto;
     }
 }
