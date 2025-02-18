@@ -4,6 +4,10 @@ import lombok.Data;
 
 @Data
 public class LoginResponseDto {
-    private String userId;
+    private Long userId;
+    private String type = "Bearer";
     private String accessToken;
+    private String companyName;
+    private String role;
+    private Boolean isAdmin;
 }

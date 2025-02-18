@@ -19,6 +19,9 @@ public class JwtUtil {
 
     public static final String SECRET = "357638792F423F4428472B4B6250655368566D597133743677397A2443264629";
 
+    private Integer validatityDays= 1;
+    private Integer validatityInMs= 86400000;
+
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
@@ -65,7 +68,7 @@ public class JwtUtil {
                 .setClaims(claims)
                 .setSubject(username)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis()+1000*60*1))
+                .setExpiration(new Date(System.currentTimeMillis()+(validatityDays * validatityInMs)))
                 .signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
     }
 

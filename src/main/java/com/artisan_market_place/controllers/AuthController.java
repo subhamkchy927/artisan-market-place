@@ -1,5 +1,6 @@
 package com.artisan_market_place.controllers;
 
+import com.artisan_market_place.Security.AuthService;
 import com.artisan_market_place.Security.JwtUtil;
 import com.artisan_market_place.requestDto.LoginRequestDto;
 import com.artisan_market_place.responseDto.LoginResponseDto;
@@ -20,24 +21,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     @Autowired
-    AuthenticationManager authenticationManager;
-
-
-    @Autowired
-    JwtUtil jwtUtil;
-
+    AuthService authService;
 
 
     @PostMapping("/login")
     public LoginResponseDto AuthenticateAndGetToken(@RequestBody LoginRequestDto authRequestDTO){
-        LoginResponseDto reponse = new  LoginResponseDto();
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequestDTO.getUserName(), authRequestDTO.getPassword()));
-        if(authentication.isAuthenticated()){
-            String token = jwtUtil.GenerateToken(authRequestDTO.getUserName());
-            reponse.setAccessToken(token);
-        }
-        else {
-            throw new UsernameNotFoundException("invalid user request..!!");
-        }
+        LoginResponseDto reponse = authService.login(authRequestDTO);
         return reponse;
     }}
