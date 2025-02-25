@@ -22,7 +22,7 @@ spring:
    datasource:
       username: root
       password: root
-      url: jdbc:mysql://localhost/vhub2_dev_1
+      url: jdbc:mysql://localhost/artisan_market_place
       driver-class-name: com.mysql.cj.jdbc.Driver
 
    jpa:
@@ -34,9 +34,10 @@ spring:
       show-sql: true
       database: mysql
 
-   jwt:
-      secret: mySuperSecretKey09012000
-      expiration: 86400000
+jwt:
+   secret: 357638792F423F4428472B4B6250655368566D597133743677397A2443264629
+   days: 1
+   days-ms: 86400000
 
 
 

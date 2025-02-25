@@ -38,4 +38,14 @@ public class GlobalExceptionHandler {
         ExceptionResponse response = ex.getExceptionResponse();
         return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
     }
+
+    @ExceptionHandler(Throwable.class)
+    public ResponseEntity<ExceptionResponse> handleAllUnhandledExceptions(Throwable ex) {
+        ExceptionResponse response = new ExceptionResponse();
+        response.setErrorMessage("An unexpected error occurred: " + ex.getMessage());
+        response.setErrorCode("UNEXPECTED_ERROR");
+        response.setStatusCode("500");
+        response.setSeverity("HIGH");
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }

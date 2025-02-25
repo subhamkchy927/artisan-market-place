@@ -2,7 +2,7 @@
 CREATE DATABASE artisan_market_place;
 
 CREATE TABLE user_details (
-    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     first_name VARCHAR(32) NOT NULL,
     middle_name VARCHAR(32) NOT NULL,
     last_name VARCHAR(32) NOT NULL,
@@ -23,8 +23,8 @@ CREATE TABLE user_details (
 
 
 CREATE TABLE user_login_info (
-    login_info_id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
+    login_info_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT NOT NULL,
     login_id VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
     creation_date DATETIME NOT NULL,
@@ -32,4 +32,30 @@ CREATE TABLE user_login_info (
     last_update_date DATETIME NOT NULL,
     last_updated_by VARCHAR(128),
     FOREIGN KEY (user_id) REFERENCES user_details(user_id)
+);
+
+CREATE TABLE bank_account (
+    bank_account_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    account_holder_name VARCHAR(128) NOT NULL,
+    account_number VARCHAR(32) NOT NULL UNIQUE,
+    ifsc_code VARCHAR(16) NOT NULL,
+    bank_name VARCHAR(64) NOT NULL,
+    branch_name VARCHAR(100) NOT NULL,
+    account_type VARCHAR(20) NOT NULL, -- Example: 'SAVINGS', 'CURRENT'
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES user_details(user_id)
+);
+
+
+CREATE TABLE credit_card (
+    card_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    card_holder_name VARCHAR(128) NOT NULL,
+    card_number VARCHAR(16) NOT NULL UNIQUE,
+    expiry_date DATE NOT NULL,
+    cvv VARCHAR(3) NOT NULL,
+    card_type VARCHAR(32) NOT NULL, -- Example: 'VISA', 'MASTERCARD', 'RUPAY'
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    CONSTRAINT fk_credit_card_user FOREIGN KEY (user_id) REFERENCES user_details(user_id)
 );

@@ -1,4 +1,6 @@
 package com.artisan_market_place.requestDto;
+import com.artisan_market_place.enums.UserRolesEnums;
+import com.artisan_market_place.enums.UserStatusEnums;
 import jakarta.persistence.Column;
 import lombok.Data;
 
@@ -11,10 +13,10 @@ public class UserRequestDto {
     private String phoneNumber;
     private String companyName;
     private String gstNumber;
-    private String status;
+    private UserStatusEnums status;
     private String sellerRating;
     private String countryCode;
     private Boolean isApplicationAdmin;
     private String password;
-    private String userRole;
+    private UserRolesEnums userRole;
 }

@@ -1,5 +1,6 @@
 package com.artisan_market_place.Security;
 
+import com.artisan_market_place.constants.ApplicationConstants;
 import com.artisan_market_place.entity.Users;
 import com.artisan_market_place.repository.UserRepository;
 import com.artisan_market_place.requestDto.LoginRequestDto;
@@ -7,10 +8,10 @@ import com.artisan_market_place.responseDto.LoginResponseDto;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
+
+import javax.security.auth.login.LoginException;
 
 @Service
 public class AuthService {
@@ -25,11 +26,16 @@ public class AuthService {
         this.userRepository = userRepository;
     }
 
-    public LoginResponseDto login(@RequestBody LoginRequestDto authRequestDTO){
-        Users loginUser = authRequestDTO.getUserName() != null ? userRepository.findByEmail(authRequestDTO.getUserName()) : null;
-        LoginResponseDto response = new  LoginResponseDto();
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequestDTO.getUserName(), authRequestDTO.getPassword()));
-        if(authentication.isAuthenticated()){
+    public LoginResponseDto login(@RequestBody LoginRequestDto authRequestDTO) throws LoginException {
+           Users loginUser = userRepository.findByEmail(authRequestDTO.getUserName());
+           LoginResponseDto response = new  LoginResponseDto();
+           Authentication authentication = null;
+           try {
+             authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequestDTO.getUserName(), authRequestDTO.getPassword()));
+           }catch(Exception e){
+            throw new com.artisan_market_place.Exception.LoginException(e.getLocalizedMessage(),ApplicationConstants.L1000);
+           }
+           if(authentication.isAuthenticated()){
             String token = jwtUtil.GenerateToken(authRequestDTO.getUserName());
             response.setAccessToken(token);
             response.setAccessToken(token);
@@ -38,11 +44,8 @@ public class AuthService {
             response.setCompanyName(loginUser.getCompanyName());
             response.setRole(loginUser.getRole());
             response.setIsAdmin(loginUser.getIsAdmin());
-        }
-        else {
-            throw new UsernameNotFoundException("invalid user request..!!");
-        }
-        return response;
+            }
+            return response;
     }
 }
 
