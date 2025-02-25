@@ -1,5 +1,6 @@
 package com.artisan_market_place.responseDto;
 
+import com.artisan_market_place.enums.UserRolesEnums;
 import lombok.Data;
 
 @Data
@@ -8,6 +9,6 @@ public class LoginResponseDto {
     private String type = "Bearer";
     private String accessToken;
     private String companyName;
-    private String role;
+    private UserRolesEnums role;
     private Boolean isAdmin;
 }

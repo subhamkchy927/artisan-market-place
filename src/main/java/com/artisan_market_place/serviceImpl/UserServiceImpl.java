@@ -98,15 +98,6 @@ public class UserServiceImpl implements UserService {
         return users;
     }
 
-    public void setLoginInfo(Long userId, UserRequestDto dto){
-        UsersLoginInfo loginInfo = new UsersLoginInfo();
-        loginInfo.setUserId(1L);
-        loginInfo.setLoginId(dto.getEmail());
-        loginInfo.setPassword(encoder.encode(dto.getPassword()));
-        loginInfo.setAuditInfo("system");
-        usersLoginInfoRepository.saveAndFlush(loginInfo);
-    }
-
     private UserResponseDto getSellerDetails(Users user) {
         UserResponseDto responseDto = new UserResponseDto();
         responseDto.setFirstName(user.getFirirstName());
@@ -120,5 +111,14 @@ public class UserServiceImpl implements UserService {
         responseDto.setIsApplicationAdmin(user.getIsAdmin());
         responseDto.setCountryCode(user.getCountryCode());
         return responseDto;
+    }
+
+    public void setLoginInfo(Long userId, UserRequestDto dto){
+        UsersLoginInfo loginInfo = new UsersLoginInfo();
+        loginInfo.setUserId(1L);
+        loginInfo.setLoginId(dto.getEmail());
+        loginInfo.setPassword(encoder.encode(dto.getPassword()));
+        loginInfo.setAuditInfo("system");
+        usersLoginInfoRepository.saveAndFlush(loginInfo);
     }
 }

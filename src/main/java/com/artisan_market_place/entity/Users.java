@@ -1,5 +1,7 @@
 package com.artisan_market_place.entity;
 
+import com.artisan_market_place.enums.UserRolesEnums;
+import com.artisan_market_place.enums.UserStatusEnums;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -34,7 +36,7 @@ public class Users extends BaseEntity {
     private String gstNumber;
 
     @Column(name = "status", nullable = false)
-    private String status;
+    private UserStatusEnums status;
 
     @Column(name = "rating")
     private String rating;
@@ -46,5 +48,5 @@ public class Users extends BaseEntity {
     private String countryCode;
 
     @Column(name = "role")
-    private String role;
+    private UserRolesEnums role;
 }
