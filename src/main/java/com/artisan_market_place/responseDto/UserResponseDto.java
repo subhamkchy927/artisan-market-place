@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 public class UserResponseDto {
-    private Long sellerId;
+    private Long userId;
     private String firstName;
     private String middleName;
     private String lastName;

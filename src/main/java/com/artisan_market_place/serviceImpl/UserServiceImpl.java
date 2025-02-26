@@ -2,6 +2,8 @@ package com.artisan_market_place.serviceImpl;
 
 import com.artisan_market_place.entity.Users;
 import com.artisan_market_place.entity.UsersLoginInfo;
+import com.artisan_market_place.enums.UserRolesEnums;
+import com.artisan_market_place.enums.UserStatusEnums;
 import com.artisan_market_place.repository.LoginUserRepository;
 import com.artisan_market_place.repository.UserRepository;
 import com.artisan_market_place.requestDto.UserRequestDto;
@@ -31,6 +33,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(rollbackFor = Throwable.class)
     public UserResponseDto createUser(UserRequestDto dto) {
         Users users = setSellerDetails(dto);
         userRepository.saveAndFlush(users);
@@ -89,20 +92,25 @@ public class UserServiceImpl implements UserService {
         users.setCompanyName(dto.getCompanyName());
         users.setGstNumber(dto.getGstNumber());
         users.setEmail(dto.getEmail());
-        users.setStatus(dto.getStatus());
+        users.setStatus(UserStatusEnums.valueOf(dto.getStatus()));
         users.setRating(dto.getSellerRating());
         users.setIsAdmin(dto.getIsApplicationAdmin());
         users.setCountryCode(dto.getCountryCode());
-        users.setRole(dto.getUserRole());
+        users.setRole(UserRolesEnums.valueOf(dto.getUserRole()));
         users.setAuditInfo("system");
         return users;
     }
 
     private UserResponseDto getSellerDetails(Users user) {
         UserResponseDto responseDto = new UserResponseDto();
+        responseDto.setUserId(user.getUserId());
+        responseDto.setUserRole(user.getRole());
         responseDto.setFirstName(user.getFirirstName());
         responseDto.setMiddleName(user.getMiddleName());
         responseDto.setLastName(user.getLastName());
+        responseDto.setEmail(user.getEmail());
+        responseDto.setEmail(user.getEmail());
+        responseDto.setEmail(user.getEmail());
         responseDto.setPhoneNumber(user.getPhoneNumber());
         responseDto.setCompanyName(user.getCompanyName());
         responseDto.setGstNumber(user.getGstNumber());
