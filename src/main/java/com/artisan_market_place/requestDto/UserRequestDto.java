@@ -13,10 +13,10 @@ public class UserRequestDto {
     private String phoneNumber;
     private String companyName;
     private String gstNumber;
-    private UserStatusEnums status;
+    private String status;
     private String sellerRating;
     private String countryCode;
     private Boolean isApplicationAdmin;
     private String password;
-    private UserRolesEnums userRole;
+    private String userRole;
 }
