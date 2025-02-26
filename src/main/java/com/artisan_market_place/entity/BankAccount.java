@@ -32,6 +32,7 @@ public class BankAccount extends BaseEntity{
     @Column(name = "branch_name", nullable = false, length = 100)
     private String branchName;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "account_type", nullable = false, length = 20)
     private BankAccountTypesEnums accountType;
 

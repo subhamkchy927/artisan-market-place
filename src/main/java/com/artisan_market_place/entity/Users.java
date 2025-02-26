@@ -35,6 +35,7 @@ public class Users extends BaseEntity {
     @Column(name = "gst_number")
     private String gstNumber;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private UserStatusEnums status;
 
@@ -47,6 +48,7 @@ public class Users extends BaseEntity {
     @Column(name = "country_code")
     private String countryCode;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private UserRolesEnums role;
 }
