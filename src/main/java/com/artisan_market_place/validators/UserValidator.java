@@ -32,11 +32,15 @@ public class UserValidator{
     public void validateCreateUserRequest(UserRequestDto user){
         if (userRepository.existsByEmail(user.getEmail()))throw new ValidationException(MessageConstants.EMAIL_ALREADY_EXISTS);
         if (userRepository.existsByPhoneNumber(user.getPhoneNumber()))throw new ValidationException(MessageConstants.PHONE_NUMBER_ALREADY_EXISTS);
+        if (!isValidEmail(user.getEmail())) throw new ValidationException(MessageConstants.INVALID_EMAIL_FORMAT);
+        if (!isValidPhoneNumber(user.getPhoneNumber())) throw new ValidationException(MessageConstants.INVALID_PHONE_NUMBER);
         validatePassword(user.getPassword());
     }
     public void validateUpdateUserRequest(Long userId, UserRequestDto user){
         if (userRepository.existsByEmailAndUserIdNot(user.getEmail(),userId)) throw new ValidationException(MessageConstants.EMAIL_ALREADY_EXISTS);
         if (userRepository.existsByPhoneNumberAndUserIdNot(user.getPhoneNumber(),userId)) throw new ValidationException(MessageConstants.PHONE_NUMBER_ALREADY_EXISTS);
+        if (!isValidEmail(user.getEmail())) throw new ValidationException(MessageConstants.INVALID_EMAIL_FORMAT);
+        if (!isValidPhoneNumber(user.getPhoneNumber())) throw new ValidationException(MessageConstants.INVALID_PHONE_NUMBER);
     }
     public void validatePassword(String password) throws ValidationException {
         if (password.length() < ApplicationConstants.MIN_LENGTH) throw new ValidationException((MessageConstants.PASSWORD_LENGTH_MESSAGE));
@@ -44,6 +48,12 @@ public class UserValidator{
         if (!password.matches(ApplicationConstants.LOWERCASE_PATTERN))throw new ValidationException(MessageConstants.LOWERCASE_MESSAGE);
         if (!password.matches(ApplicationConstants.DIGIT_PATTERN))throw new ValidationException(MessageConstants.DIGIT_MESSAGE);
         if (!password.matches(ApplicationConstants.SPECIAL_CHARACTER_PATTERN))throw new ValidationException(MessageConstants.SPECIAL_CHARACTER_MESSAGE);
+    }
+    private boolean isValidEmail(String email) {
+        return email != null && email.matches(ApplicationConstants.EMAIL_PATTERN);
+    }
+    private boolean isValidPhoneNumber(String phoneNumber) {
+        return phoneNumber != null && phoneNumber.matches(ApplicationConstants.MOBILE_PATTERN);
     }
     public Users validateUserIdAndReturn(Long userId){
         Optional<Users> userOpt = Optional.empty();

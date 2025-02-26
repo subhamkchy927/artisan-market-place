@@ -6,4 +6,7 @@ public class ApplicationConstants {
     public static final String LOWERCASE_PATTERN = ".*[a-z].*";
     public static final String DIGIT_PATTERN = ".*[0-9].*";
     public static final String SPECIAL_CHARACTER_PATTERN = ".*[@$!%*?&].*";
+
+    public static final String EMAIL_PATTERN = "^[a-zA-Z0-9]+@[a-zA-Z0-9]+\\.[a-zA-Z]{2,}$";
+    public static final String MOBILE_PATTERN = "\\d{10}";
 }
