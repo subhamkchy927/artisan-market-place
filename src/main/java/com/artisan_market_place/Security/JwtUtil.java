@@ -29,6 +29,9 @@ public class JwtUtil {
     private Integer validatityInMs;
 
     public String extractUsername(String token) {
+        if(token.startsWith("Bearer ")){
+            token = token.substring(7);
+        }
         return extractClaim(token, Claims::getSubject);
     }
 

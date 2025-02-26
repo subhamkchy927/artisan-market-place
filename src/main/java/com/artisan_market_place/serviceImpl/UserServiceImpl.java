@@ -36,7 +36,8 @@ public class UserServiceImpl implements UserService {
     public UserResponseDto createUser(UserRequestDto dto,String loginUser) {
         userValidator.validateMandatory(dto);
         userValidator.validateCreateUserRequest(dto);
-        Users user = setUserDetails(dto,loginUser);
+        Users user = new Users();
+        user = setUserDetails(user, dto,loginUser);
         userRepository.saveAndFlush(user);
         setLoginInfo(user.getUserId(),dto);
         return getUserDetails(user);
@@ -45,10 +46,10 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(rollbackFor = Throwable.class)
     public UserResponseDto updateUser(UserRequestDto dto, Long userId,String loginUser) {
+        Users user = userValidator.validateUserIdAndReturn(userId);
         userValidator.validateMandatory(dto);
         userValidator.validateUpdateUserRequest(userId,dto);
-        Users user = userValidator.validateUserIdAndReturn(userId);
-        user = setUserDetails(dto,loginUser);
+        user = setUserDetails(user,dto,loginUser);
         userRepository.save(user);
         return getUserDetails(user);
     }
@@ -82,8 +83,7 @@ public class UserServiceImpl implements UserService {
 
 
 
-    private Users setUserDetails(UserRequestDto dto,String loginUser) {
-        Users users = new Users();
+    private Users setUserDetails(Users users,UserRequestDto dto,String loginUser) {
         users.setFirirstName(dto.getFirstName());
         users.setMiddleName(dto.getMiddleName());
         users.setLastName(dto.getLastName());
