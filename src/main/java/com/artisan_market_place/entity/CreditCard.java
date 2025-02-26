@@ -31,6 +31,7 @@ public class CreditCard extends BaseEntity{
     @Column(name = "cvv", nullable = false, length = 3)
     private String cvv;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "card_type", nullable = false, length = 32)
     private CreditCardTypesEnums cardType;
 
