@@ -4,7 +4,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,13 +15,14 @@ import java.io.IOException;
 
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
-        @Autowired
-        private JwtUtil jwtUtil;
+        private final JwtUtil jwtUtil;
+        private final PrincipleUsersServiceImpl userDetailsServiceImpl;
+    public JwtAuthFilter(JwtUtil jwtUtil, PrincipleUsersServiceImpl userDetailsServiceImpl) {
+        this.jwtUtil = jwtUtil;
+        this.userDetailsServiceImpl = userDetailsServiceImpl;
+    }
 
-        @Autowired
-        PrincipleUsersServiceImpl userDetailsServiceImpl;
-
-        @Override
+    @Override
         protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
             String authHeader = request.getHeader("Authorization");

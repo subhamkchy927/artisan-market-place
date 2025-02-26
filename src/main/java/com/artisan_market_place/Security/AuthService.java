@@ -1,6 +1,7 @@
 package com.artisan_market_place.Security;
 
 import com.artisan_market_place.constants.ApplicationConstants;
+import com.artisan_market_place.constants.MessageConstants;
 import com.artisan_market_place.entity.Users;
 import com.artisan_market_place.repository.UserRepository;
 import com.artisan_market_place.requestDto.LoginRequestDto;
@@ -33,7 +34,7 @@ public class AuthService {
            try {
              authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequestDTO.getUserName(), authRequestDTO.getPassword()));
            }catch(Exception e){
-            throw new com.artisan_market_place.Exception.LoginException(e.getLocalizedMessage(),ApplicationConstants.L1000);
+            throw new com.artisan_market_place.Exception.LoginException(e.getLocalizedMessage(), MessageConstants.L1000);
            }
            if(authentication.isAuthenticated()){
             String token = jwtUtil.GenerateToken(authRequestDTO.getUserName());

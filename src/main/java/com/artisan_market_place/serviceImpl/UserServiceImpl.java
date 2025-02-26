@@ -9,81 +9,80 @@ import com.artisan_market_place.repository.UserRepository;
 import com.artisan_market_place.requestDto.UserRequestDto;
 import com.artisan_market_place.responseDto.UserResponseDto;
 import com.artisan_market_place.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.artisan_market_place.validators.UserValidator;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final LoginUserRepository usersLoginInfoRepository;
-
-    @Autowired
-    PasswordEncoder encoder;
-    public UserServiceImpl(UserRepository userRepository, LoginUserRepository usersLoginInfoRepository) {
+    private final UserValidator userValidator;
+    private final PasswordEncoder encoder;
+    public UserServiceImpl(UserRepository userRepository, LoginUserRepository usersLoginInfoRepository, UserValidator userValidator, PasswordEncoder encoder) {
         this.userRepository = userRepository;
         this.usersLoginInfoRepository = usersLoginInfoRepository;
+        this.userValidator = userValidator;
+        this.encoder = encoder;
     }
 
     @Override
     @Transactional(rollbackFor = Throwable.class)
-    public UserResponseDto createUser(UserRequestDto dto) {
-        Users users = setSellerDetails(dto);
-        userRepository.saveAndFlush(users);
-        setLoginInfo(users.getUserId(),dto);
-        return getSellerDetails(users);
+    public UserResponseDto createUser(UserRequestDto dto,String loginUser) {
+        userValidator.validateMandatory(dto);
+        userValidator.validateCreateUserRequest(dto);
+        Users user = setUserDetails(dto,loginUser);
+        userRepository.saveAndFlush(user);
+        setLoginInfo(user.getUserId(),dto);
+        return getUserDetails(user);
     }
 
     @Override
     @Transactional(rollbackFor = Throwable.class)
-    public UserResponseDto updateUser(UserRequestDto dto, Long sellerId) {
-        Optional<Users> optionalSeller = userRepository.findById(sellerId);
-        if (optionalSeller.isPresent()) {
-            Users users = optionalSeller.get();
-            users = setSellerDetails(dto);
-            userRepository.save(users);
-            return getSellerDetails(users);
-        }
-        return null;
+    public UserResponseDto updateUser(UserRequestDto dto, Long userId,String loginUser) {
+        userValidator.validateMandatory(dto);
+        userValidator.validateUpdateUserRequest(userId,dto);
+        Users user = userValidator.validateUserIdAndReturn(userId);
+        user = setUserDetails(dto,loginUser);
+        userRepository.save(user);
+        return getUserDetails(user);
     }
 
     @Override
-    public UserResponseDto getUserById(Long sellerId) {
-        Optional<Users> optionalSeller = userRepository.findById(sellerId);
-        return optionalSeller.map(this::getSellerDetails).orElse(null);
+    public UserResponseDto getUserById(Long userId,String loginUser) {
+        Users user = userValidator.validateUserIdAndReturn(userId);
+        UserResponseDto response = new UserResponseDto();
+        response = getUserDetails(user);
+        return response;
     }
 
     @Override
-    public HashMap<String, String> deleteUser(Long sellerId) {
+    public HashMap<String, String> deleteUser(Long userId,String loginUser) {
         HashMap<String, String> response = new HashMap<>();
-        Optional<Users> optionalSeller = userRepository.findById(sellerId);
-        if (optionalSeller.isPresent()) {
-            Users users = optionalSeller.get();
-            userRepository.delete(users);
-        }
-        response.put("Seller Id", sellerId.toString());
+        Users user = userValidator.validateUserIdAndReturn(userId);
+        userRepository.delete(user);
+        response.put("userId", userId.toString());
         response.put("Status", "Success");
         return response;
     }
 
     @Override
-    public List<UserResponseDto> getAllUser(Boolean isApplicationAdmin) {
-        List<Users> sellers = userRepository.findAll();
-        return sellers.stream()
-                .filter(seller -> isApplicationAdmin == null || seller.getIsAdmin().equals(isApplicationAdmin))
-                .map(this::getSellerDetails)
+    public List<UserResponseDto> getAllUser(Boolean isApplicationAdmin,String loginUser) {
+        List<Users> usersList = userRepository.findAll();
+        return usersList.stream()
+                .filter(user -> isApplicationAdmin == null || user.getIsAdmin().equals(isApplicationAdmin))
+                .map(this::getUserDetails)
                 .collect(Collectors.toList());
     }
 
 
-    private Users setSellerDetails(UserRequestDto dto) {
+
+    private Users setUserDetails(UserRequestDto dto,String loginUser) {
         Users users = new Users();
         users.setFirirstName(dto.getFirstName());
         users.setMiddleName(dto.getMiddleName());
@@ -93,7 +92,7 @@ public class UserServiceImpl implements UserService {
         users.setGstNumber(dto.getGstNumber());
         users.setEmail(dto.getEmail());
         users.setStatus(UserStatusEnums.valueOf(dto.getStatus()));
-        users.setRating(dto.getSellerRating());
+        users.setRating(dto.getUserRating());
         users.setIsAdmin(dto.getIsApplicationAdmin());
         users.setCountryCode(dto.getCountryCode());
         users.setRole(UserRolesEnums.valueOf(dto.getUserRole()));
@@ -101,7 +100,7 @@ public class UserServiceImpl implements UserService {
         return users;
     }
 
-    private UserResponseDto getSellerDetails(Users user) {
+    private UserResponseDto getUserDetails(Users user) {
         UserResponseDto responseDto = new UserResponseDto();
         responseDto.setUserId(user.getUserId());
         responseDto.setUserRole(user.getRole());
@@ -123,7 +122,7 @@ public class UserServiceImpl implements UserService {
 
     public void setLoginInfo(Long userId, UserRequestDto dto){
         UsersLoginInfo loginInfo = new UsersLoginInfo();
-        loginInfo.setUserId(1L);
+        loginInfo.setUserId(userId);
         loginInfo.setLoginId(dto.getEmail());
         loginInfo.setPassword(encoder.encode(dto.getPassword()));
         loginInfo.setAuditInfo("system");
