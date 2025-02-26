@@ -20,4 +20,5 @@ public class MessageConstants {
     public static final String USER_NOT_FOUND = "Uer not found with provided user id";
     public static final String INVALID_EMAIL_FORMAT = "Invalid email. It should be alphanumeric and should contain @ symbol";
     public static final String INVALID_PHONE_NUMBER = "Invalid phone number. It should be numer and 10 digits";
+    public static final String USER_BANNED = "This user is banned from the application, due to terms & condition voilation";
 }

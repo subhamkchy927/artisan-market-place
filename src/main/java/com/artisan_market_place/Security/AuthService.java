@@ -3,6 +3,7 @@ package com.artisan_market_place.Security;
 import com.artisan_market_place.constants.ApplicationConstants;
 import com.artisan_market_place.constants.MessageConstants;
 import com.artisan_market_place.entity.Users;
+import com.artisan_market_place.enums.UserStatusEnums;
 import com.artisan_market_place.repository.UserRepository;
 import com.artisan_market_place.requestDto.LoginRequestDto;
 import com.artisan_market_place.responseDto.LoginResponseDto;
@@ -10,9 +11,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import com.artisan_market_place.Exception.LoginException;
 import org.springframework.web.bind.annotation.RequestBody;
-
-import javax.security.auth.login.LoginException;
 
 @Service
 public class AuthService {
@@ -29,6 +29,9 @@ public class AuthService {
 
     public LoginResponseDto login(@RequestBody LoginRequestDto authRequestDTO) throws LoginException {
            Users loginUser = userRepository.findByEmail(authRequestDTO.getUserName());
+           if(UserStatusEnums.BANNED.equals(loginUser.getStatus())){
+               throw new LoginException(MessageConstants.USER_BANNED);
+           }
            LoginResponseDto response = new  LoginResponseDto();
            Authentication authentication = null;
            try {
