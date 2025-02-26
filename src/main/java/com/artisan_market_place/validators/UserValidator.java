@@ -47,6 +47,7 @@ public class UserValidator{
     }
     public Users validateUserIdAndReturn(Long userId){
         Optional<Users> userOpt = Optional.empty();
+        userOpt = userRepository.findById(userId);
         if(!userOpt.isPresent()) throw new ResourceNotFoundException(MessageConstants.USER_NOT_FOUND);
         Users user = userOpt.get();
         return user;
