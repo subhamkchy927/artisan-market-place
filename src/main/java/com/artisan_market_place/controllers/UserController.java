@@ -1,5 +1,6 @@
 package com.artisan_market_place.controllers;
 
+import com.artisan_market_place.Security.JwtUtil;
 import com.artisan_market_place.requestDto.UserRequestDto;
 import com.artisan_market_place.responseDto.UserResponseDto;
 import com.artisan_market_place.serviceImpl.UserServiceImpl;
@@ -15,40 +16,48 @@ import java.util.List;
 @RequestMapping("/api/v2/user")
 @Slf4j
 public class UserController {
-    private final UserServiceImpl sellerService;
-    public UserController(UserServiceImpl sellerService, PasswordEncoder encoder) {
-        this.sellerService = sellerService;
+
+    private final UserServiceImpl userService;
+    private final JwtUtil jwtUtil;
+    public UserController(UserServiceImpl userService, PasswordEncoder encoder, JwtUtil jwtUtil) {
+        this.userService = userService;
+        this.jwtUtil = jwtUtil;
     }
 
-    @PutMapping("/{sellerId}")
-    public ResponseEntity<UserResponseDto> updateSeller(
+    @PutMapping("/{userId}")
+    public ResponseEntity<UserResponseDto> updateUser(
             @RequestBody UserRequestDto dto,
-            @PathVariable Long sellerId) {
-        log.info("Request to update seller with ID: {}", sellerId);
-        UserResponseDto response = sellerService.updateUser(dto, sellerId);
+            @PathVariable Long userId,
+            @RequestHeader(value = "Authorization") String token) {
+        log.info("Request to update user with ID: {}", userId);
+        String loginUser = jwtUtil.extractUsername(token);
+        UserResponseDto response = userService.updateUser(dto, userId,loginUser);
         return response != null ? ResponseEntity.ok(response) : ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/{sellerId}")
-    public ResponseEntity<UserResponseDto> getSellerById(@PathVariable Long sellerId) {
-        log.info("Fetching seller with ID: {}", sellerId);
-        UserResponseDto response = sellerService.getUserById(sellerId);
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserResponseDto> getuserById(@PathVariable Long userId,@RequestHeader(value = "Authorization") String token) {
+        log.info("Fetching user with ID: {}", userId);
+        String loginUser = jwtUtil.extractUsername(token);
+        UserResponseDto response = userService.getUserById(userId,loginUser);
         return response != null ? ResponseEntity.ok(response) : ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("/{sellerId}")
-    public ResponseEntity<HashMap<String,String>> deleteSeller(@PathVariable Long sellerId) {
-        log.info("Request to delete seller with ID: {}", sellerId);
-        HashMap<String,String> response = sellerService.deleteUser(sellerId);
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<HashMap<String,String>> deleteUser(@PathVariable Long userId,@RequestHeader(value = "Authorization") String token) {
+        log.info("Request to delete seluserler with ID: {}", userId);
+        String loginUser = jwtUtil.extractUsername(token);
+        HashMap<String,String> response = userService.deleteUser(userId,loginUser);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<UserResponseDto>> getAllSellers(
-            @RequestParam(required = false) Boolean isApplicationAdmin) {
-        log.info("Fetching all sellers. isApplicationAdmin: {}", isApplicationAdmin);
-        List<UserResponseDto> sellers = sellerService.getAllUser(isApplicationAdmin);
-        return ResponseEntity.ok(sellers);
+    public ResponseEntity<List<UserResponseDto>> getAllUsers(
+            @RequestParam(required = false) Boolean isApplicationAdmin,@RequestHeader(value = "Authorization") String token) {
+        log.info("Fetching all users. isApplicationAdmin: {}", isApplicationAdmin);
+        String loginUser = jwtUtil.extractUsername(token);
+        List<UserResponseDto> user = userService.getAllUser(isApplicationAdmin,loginUser);
+        return ResponseEntity.ok(user);
     }
     }
 

@@ -14,7 +14,7 @@ public class UserRequestDto {
     private String companyName;
     private String gstNumber;
     private String status;
-    private String sellerRating;
+    private String userRating;
     private String countryCode;
     private Boolean isApplicationAdmin;
     private String password;

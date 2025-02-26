@@ -22,8 +22,8 @@ public class SessionController {
     @PostMapping("/register/")
     public ResponseEntity<UserResponseDto> updateSeller(
             @RequestBody UserRequestDto dto) {
-        log.info("Request to create user with ID: {}", dto);
-        UserResponseDto response = userService.createUser(dto);
+        log.info("Request to create user", dto);
+        UserResponseDto response = userService.createUser(dto,"System");
         return response != null ? ResponseEntity.ok(response) : ResponseEntity.notFound().build();
     }
 
