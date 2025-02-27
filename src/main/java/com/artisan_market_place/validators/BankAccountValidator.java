@@ -13,13 +13,16 @@ import java.util.Optional;
 
 public class BankAccountValidator {
     private final BankAccountRepository bankAccountRepository;
+    private final GlobalValidatorService globalValidatorService;
 
-    public BankAccountValidator(BankAccountRepository bankAccountRepository) {
+    public BankAccountValidator(BankAccountRepository bankAccountRepository, GlobalValidatorService globalValidatorService) {
         this.bankAccountRepository = bankAccountRepository;
+        this.globalValidatorService = globalValidatorService;
     }
 
     public void validateMandatory(BankAccountRequestDto bankAccount) {
         if (bankAccount == null) throw new ValidationException(MessageConstants.BANK_ACCOUNT_OBJECT_NULL);
+        if(bankAccount.getUserId() == null) throw new ValidationException(MessageConstants.ASSOCIATED_USER_ID_MANDATORY);
         if (!StringUtils.hasText(bankAccount.getAccountHolderName()))throw new ValidationException(MessageConstants.ACCOUNT_HOLDER_NAME_MANDATORY);
         if (!StringUtils.hasText(bankAccount.getAccountNumber()))throw new ValidationException(MessageConstants.ACCOUNT_NUMBER_MANDATORY);
         if (!StringUtils.hasText(bankAccount.getIfscCode()))throw new ValidationException(MessageConstants.IFSC_CODE_MANDATORY);
@@ -31,12 +34,14 @@ public class BankAccountValidator {
     public void validateCreateBankAccountRequest(BankAccountRequestDto bankAccount) {
         validateMandatory(bankAccount);
         validateRequest(bankAccount);
+        globalValidatorService.validateUserId(bankAccount.getUserId());
         if (bankAccountRepository.existsByAccountNumberAndUserId(bankAccount.getAccountNumber(),bankAccount.getUserId()))throw new ValidationException(MessageConstants.ACCOUNT_NUMBER_ALREADY_EXISTS);
     }
 
     public void validateUpdateBankAccountRequest(Long bankAccountId, BankAccountRequestDto bankAccount) {
         validateMandatory(bankAccount);
         validateRequest(bankAccount);
+        globalValidatorService.validateUserId(bankAccount.getUserId());
         if (bankAccountRepository.existsByAccountNumberAndUserIdAndBankAccountIdNot(bankAccount.getAccountNumber(),bankAccount.getUserId(), bankAccountId))throw new ValidationException(MessageConstants.ACCOUNT_NUMBER_ALREADY_EXISTS);
     }
 

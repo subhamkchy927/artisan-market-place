@@ -7,10 +7,8 @@ import com.artisan_market_place.constants.MessageConstants;
 import com.artisan_market_place.entity.Users;
 import com.artisan_market_place.repository.UserRepository;
 import com.artisan_market_place.requestDto.UserRequestDto;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-
 import java.util.Optional;
 
 @Service
@@ -18,9 +16,11 @@ public class UserValidator{
 
     private final UserRepository userRepository;
 
-    public UserValidator(UserRepository userRepository) {
+    public UserValidator(UserRepository userRepository, GlobalValidatorService globalValidatorService) {
         this.userRepository = userRepository;
     }
+
+
     public void validateMandatory(UserRequestDto user) {
         if (user == null) throw new ValidationException(MessageConstants.USER_OBJECT_NULL);
         if (!StringUtils.hasText(user.getFirstName()))throw new ValidationException(MessageConstants.FIRST_NAME_MANDATORY);
