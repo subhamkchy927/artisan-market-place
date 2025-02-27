@@ -1,9 +1,11 @@
 package com.artisan_market_place.serviceImpl;
 import com.artisan_market_place.entity.CreditCard;
+import com.artisan_market_place.enums.CreditCardTypesEnums;
 import com.artisan_market_place.repository.CreditCardRepository;
 import com.artisan_market_place.requestDto.CreditCardRequestDto;
 import com.artisan_market_place.responseDto.CreditCardResponseDto;
 import com.artisan_market_place.service.CreditCardService;
+import com.artisan_market_place.validators.CreditCardValidator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,14 +17,17 @@ import java.util.stream.Collectors;
 @Service
 public class CreditCardServiceImpl implements CreditCardService {
     private final CreditCardRepository creditCardRepository;
+    private final CreditCardValidator creditCardValidator;
 
-    public CreditCardServiceImpl(CreditCardRepository creditCardRepository) {
+    public CreditCardServiceImpl(CreditCardRepository creditCardRepository, CreditCardValidator creditCardValidator) {
         this.creditCardRepository = creditCardRepository;
+        this.creditCardValidator = creditCardValidator;
     }
 
     @Override
     @Transactional(rollbackFor = Throwable.class)
     public CreditCardResponseDto addCreditCard(CreditCardRequestDto dto, String loginUser) {
+        creditCardValidator.validateCreateCardRequest(dto);
         CreditCard creditCard = new CreditCard();
         creditCard = setCreditCardDetails(creditCard, dto);
         creditCardRepository.saveAndFlush(creditCard);
@@ -32,8 +37,8 @@ public class CreditCardServiceImpl implements CreditCardService {
     @Override
     @Transactional(rollbackFor = Throwable.class)
     public CreditCardResponseDto updateCreditCard(CreditCardRequestDto dto, Long cardId, String loginUser) {
-        CreditCard creditCard = creditCardRepository.findById(cardId)
-                .orElseThrow(() -> new RuntimeException("Credit Card not found"));
+        creditCardValidator.validateUpdateCardRequest(cardId,dto);
+        CreditCard creditCard = creditCardValidator.validateCardIdAndReturn(cardId);
         creditCard = setCreditCardDetails(creditCard, dto);
         creditCardRepository.save(creditCard);
         return getCreditCardDetails(creditCard);
@@ -41,8 +46,7 @@ public class CreditCardServiceImpl implements CreditCardService {
 
     @Override
     public CreditCardResponseDto getCreditCardById(Long cardId, String loginUser) {
-        CreditCard creditCard = creditCardRepository.findById(cardId)
-                .orElseThrow(() -> new RuntimeException("Credit Card not found"));
+        CreditCard creditCard = creditCardValidator.validateCardIdAndReturn(cardId);
         return getCreditCardDetails(creditCard);
     }
 
@@ -57,8 +61,7 @@ public class CreditCardServiceImpl implements CreditCardService {
     @Override
     public Map<String, String> deleteCreditCard(Long cardId, String loginUser) {
         Map<String, String> response = new HashMap<>();
-        CreditCard creditCard = creditCardRepository.findById(cardId)
-                .orElseThrow(() -> new RuntimeException("Credit Card not found"));
+        CreditCard creditCard = creditCardValidator.validateCardIdAndReturn(cardId);
         creditCardRepository.delete(creditCard);
         response.put("cardId", cardId.toString());
         response.put("Status", "Success");
@@ -71,7 +74,7 @@ public class CreditCardServiceImpl implements CreditCardService {
         creditCard.setCardNumber(dto.getCardNumber());
         creditCard.setExpiryDate(dto.getExpiryDate());
         creditCard.setCvv(dto.getCvv());
-        creditCard.setCardType(dto.getCardType());
+        creditCard.setCardType(CreditCardTypesEnums.valueOf(dto.getCardType()));
         creditCard.setIsActive(dto.getIsActive());
         return creditCard;
     }

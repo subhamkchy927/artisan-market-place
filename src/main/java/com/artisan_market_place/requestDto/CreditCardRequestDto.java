@@ -16,6 +16,6 @@ public class CreditCardRequestDto {
     private String cardNumber;
     private Date expiryDate;
     private String cvv;
-    private CreditCardTypesEnums cardType;
+    private String cardType;
     private Boolean isActive = true;
 }

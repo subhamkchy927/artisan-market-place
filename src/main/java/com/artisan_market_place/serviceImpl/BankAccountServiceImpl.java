@@ -1,9 +1,11 @@
 package com.artisan_market_place.serviceImpl;
 import com.artisan_market_place.entity.BankAccount;
+import com.artisan_market_place.enums.BankAccountTypesEnums;
 import com.artisan_market_place.repository.BankAccountRepository;
 import com.artisan_market_place.requestDto.BankAccountRequestDto;
 import com.artisan_market_place.responseDto.BankAccountResponseDto;
 import com.artisan_market_place.service.BankAccountService;
+import com.artisan_market_place.validators.BankAccountValidator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,14 +18,16 @@ import java.util.stream.Collectors;
 @Service
 public class BankAccountServiceImpl implements BankAccountService {
     private final BankAccountRepository bankAccountRepository;
-
-    public BankAccountServiceImpl(BankAccountRepository bankAccountRepository) {
+    private final BankAccountValidator bankAccountValidator;
+    public BankAccountServiceImpl(BankAccountRepository bankAccountRepository, BankAccountValidator bankAccountValidator) {
         this.bankAccountRepository = bankAccountRepository;
+        this.bankAccountValidator = bankAccountValidator;
     }
 
     @Override
     @Transactional(rollbackFor = Throwable.class)
     public BankAccountResponseDto addBankAccount(BankAccountRequestDto dto, String loginUser) {
+        bankAccountValidator.validateCreateBankAccountRequest(dto);
         BankAccount bankAccount = setBankAccountDetails(new BankAccount(), dto);
         bankAccountRepository.saveAndFlush(bankAccount);
         return getBankAccountDetails(bankAccount);
@@ -32,8 +36,8 @@ public class BankAccountServiceImpl implements BankAccountService {
     @Override
     @Transactional(rollbackFor = Throwable.class)
     public BankAccountResponseDto updateBankAccount(BankAccountRequestDto dto, Long bankAccountId, String loginUser) {
-        BankAccount bankAccount = bankAccountRepository.findById(bankAccountId)
-                .orElseThrow(() -> new RuntimeException("Bank account not found"));
+        bankAccountValidator.validateUpdateBankAccountRequest(bankAccountId,dto);
+        BankAccount bankAccount = bankAccountValidator.validateBankAccountIdAndReturn(bankAccountId);
         bankAccount = setBankAccountDetails(bankAccount, dto);
         bankAccountRepository.save(bankAccount);
         return getBankAccountDetails(bankAccount);
@@ -41,8 +45,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 
     @Override
     public BankAccountResponseDto getBankAccountById(Long bankAccountId, String loginUser) {
-        BankAccount bankAccount = bankAccountRepository.findById(bankAccountId)
-                .orElseThrow(() -> new RuntimeException("Bank account not found"));
+        BankAccount bankAccount = bankAccountValidator.validateBankAccountIdAndReturn(bankAccountId);
         return getBankAccountDetails(bankAccount);
     }
 
@@ -56,8 +59,7 @@ public class BankAccountServiceImpl implements BankAccountService {
     @Transactional(rollbackFor = Throwable.class)
     public Map<String, String> deleteBankAccount(Long bankAccountId, String loginUser) {
         Map<String, String> response = new HashMap<>();
-        BankAccount bankAccount = bankAccountRepository.findById(bankAccountId)
-                .orElseThrow(() -> new RuntimeException("Bank account not found"));
+        BankAccount bankAccount = bankAccountValidator.validateBankAccountIdAndReturn(bankAccountId);
         bankAccountRepository.delete(bankAccount);
         response.put("bankAccountId", bankAccountId.toString());
         response.put("Status", "Success");
@@ -71,7 +73,7 @@ public class BankAccountServiceImpl implements BankAccountService {
         bankAccount.setIfscCode(dto.getIfscCode());
         bankAccount.setBankName(dto.getBankName());
         bankAccount.setBranchName(dto.getBranchName());
-        bankAccount.setAccountType(dto.getAccountType());
+        bankAccount.setAccountType(BankAccountTypesEnums.valueOf(dto.getAccountType()));
         bankAccount.setIsActive(dto.getIsActive());
         return bankAccount;
     }

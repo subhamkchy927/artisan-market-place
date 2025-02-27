@@ -42,7 +42,7 @@ public class BankAccountValidator {
 
     private void validateRequest(BankAccountRequestDto bankAccount) {
         if (!ApplicationConstants.IFSC_PATTERN.matches(bankAccount.getIfscCode()))throw new ValidationException(MessageConstants.INVALID_IFSC_CODE);
-        if (bankAccount.getAccountNumber().length() < 9 || bankAccount.getAccountNumber().length() > 18) throw new ValidationException(MessageConstants.INVALID_ACCOUNT_NUMBER_LENGTH);
+        if (bankAccount.getAccountNumber().length() < 6 || bankAccount.getAccountNumber().length() > 18) throw new ValidationException(MessageConstants.INVALID_ACCOUNT_NUMBER_LENGTH);
     }
 
     public BankAccount validateBankAccountIdAndReturn(Long bankAccountId) {

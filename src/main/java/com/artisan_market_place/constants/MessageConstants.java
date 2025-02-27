@@ -31,6 +31,16 @@ public class MessageConstants {
     public static final String ACCOUNT_NUMBER_ALREADY_EXISTS = "Account number already exists.";
     public static final String INVALID_IFSC_CODE = "Invalid IFSC code. Example of a valid IFSC code: 'SBIN0001234'.";
     public static final String BANK_ACCOUNT_NOT_FOUND = "Bank account not found.";
-    public static final String INVALID_ACCOUNT_NUMBER_LENGTH = "Invalid account number length.";
+    public static final String INVALID_ACCOUNT_NUMBER_LENGTH = "Invalid account number length. Bank account numbers typically range from 6 to 18 digits, depending on the bank.";
 
+    public static final String CARD_NUMBER_ALREADY_EXISTS = "Card number already exists.";
+    public static final String CARD_OBJECT_NULL = "Card object cannot be null.";
+    public static final String CARD_HOLDER_NAME_MANDATORY = "Cardholder name is mandatory.";
+    public static final String CARD_NUMBER_MANDATORY = "Card number is mandatory.";
+    public static final String EXPIRY_DATE_MANDATORY = "Expiry date is mandatory.";
+    public static final String CVV_MANDATORY = "CVV is mandatory.";
+    public static final String CARD_TYPE_MANDATORY = "Card type is mandatory.";
+    public static final String CARD_NOT_FOUND = "Card not found.";
+    public static final String INVALID_CVV_LENGTH = "Invalid CVV length. CVV must be 3 digits for Visa, MasterCard, Discover, JCB, and RuPay, and 4 digits for American Express.";
+    public static final String INVALID_CARD_NUMBER_LENGTH = "Invalid card number length. Card numbers must be 16 digits for Visa, MasterCard, Discover, JCB, and RuPay, and 15 digits for American Express.";
 }
