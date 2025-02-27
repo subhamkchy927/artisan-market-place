@@ -48,13 +48,13 @@ public class BankAccountValidator {
     }
 
     private void validateRequest(BankAccountRequestDto bankAccount) {
-        if (bankAccount.getIfscCode().length() != 11)throw new ValidationException(MessageConstants.INVALID_IFSC_CODE);
+        if (bankAccount.getIfscCode().length() != 11) throw new ValidationException(MessageConstants.INVALID_IFSC_CODE);
         if (bankAccount.getAccountNumber().length() < 6 || bankAccount.getAccountNumber().length() > 18) throw new ValidationException(MessageConstants.INVALID_ACCOUNT_NUMBER_LENGTH);
     }
 
     public BankAccount validateBankAccountIdAndReturn(Long bankAccountId) {
         Optional<BankAccount> bankAccountOpt = Optional.empty();
-                bankAccountRepository.findById(bankAccountId);
+        bankAccountOpt = bankAccountRepository.findById(bankAccountId);
         if (!bankAccountOpt.isPresent())throw new ResourceNotFoundException(MessageConstants.BANK_ACCOUNT_NOT_FOUND);
         return bankAccountOpt.get();
     }

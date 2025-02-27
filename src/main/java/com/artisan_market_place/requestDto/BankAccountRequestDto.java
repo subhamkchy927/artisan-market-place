@@ -16,5 +16,5 @@ public class BankAccountRequestDto {
     private String bankName;
     private String branchName;
     private String accountType;
-    private Boolean isActive = true;
+    private Boolean isActive = false;
 }
