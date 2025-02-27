@@ -33,10 +33,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(rollbackFor = Throwable.class)
-    public UserResponseDto createUser(UserRequestDto dto,String loginUser) {
+    public UserResponseDto createUser(UserRequestDto dto) {
         userValidator.validateCreateUserRequest(dto);
         Users user = new Users();
-        user = setUserDetails(user, dto,loginUser);
+        user = setUserDetails(user, dto,dto.getEmail());
         userRepository.saveAndFlush(user);
         setLoginInfo(user.getUserId(),dto);
         return getUserDetails(user);
@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
         Users user = userValidator.validateUserIdAndReturn(userId);
         userValidator.validateUpdateUserRequest(userId,dto);
         user = setUserDetails(user,dto,loginUser);
-        userRepository.save(user);
+        userRepository.saveAndFlush(user);
         return getUserDetails(user);
     }
 
@@ -94,7 +94,7 @@ public class UserServiceImpl implements UserService {
         users.setIsAdmin(dto.getIsApplicationAdmin());
         users.setCountryCode(dto.getCountryCode());
         users.setRole(UserRolesEnums.valueOf(dto.getUserRole()));
-        users.setAuditInfo("system");
+        users.setAuditInfo(loginUser);
         return users;
     }
 

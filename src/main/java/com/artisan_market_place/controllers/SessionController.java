@@ -23,7 +23,7 @@ public class SessionController {
     public ResponseEntity<UserResponseDto> updateSeller(
             @RequestBody UserRequestDto dto) {
         log.info("Request to create user", dto);
-        UserResponseDto response = userService.createUser(dto,"System");
+        UserResponseDto response = userService.createUser(dto);
         return response != null ? ResponseEntity.ok(response) : ResponseEntity.notFound().build();
     }
 

@@ -2,7 +2,6 @@ package com.artisan_market_place.validators;
 
 import com.artisan_market_place.Exception.ResourceNotFoundException;
 import com.artisan_market_place.Exception.ValidationException;
-import com.artisan_market_place.constants.ApplicationConstants;
 import com.artisan_market_place.constants.MessageConstants;
 import com.artisan_market_place.entity.CreditCard;
 import com.artisan_market_place.repository.CreditCardRepository;
@@ -13,10 +12,10 @@ import org.springframework.util.StringUtils;
 import java.util.Optional;
 
 @Service
-public class CredirCardValidator {
+public class CreditCardValidator {
     private final CreditCardRepository creditCardRepository;
 
-    public CredirCardValidator(CreditCardRepository creditCardRepository) {
+    public CreditCardValidator(CreditCardRepository creditCardRepository) {
         this.creditCardRepository = creditCardRepository;
     }
 
@@ -30,34 +29,23 @@ public class CredirCardValidator {
     }
 
     public void validateCreateCardRequest(CreditCardRequestDto card) {
-        if (creditCardRepository.existsByCardNumber(card.getCardNumber()))
-            throw new ValidationException(MessageConstants.CARD_NUMBER_ALREADY_EXISTS);
-        if (!isValidCardNumber(card.getCardNumber()))
-            throw new ValidationException(MessageConstants.INVALID_CARD_NUMBER);
-        if (!isValidCvv(card.getCvv()))
-            throw new ValidationException(MessageConstants.INVALID_CVV);
+        validateMandatory(card);
+        isValidCard(card);
+        if (creditCardRepository.existsByCardNumberAndUserId(card.getCardNumber(),card.getUserId())) throw new ValidationException(MessageConstants.CARD_NUMBER_ALREADY_EXISTS);
     }
 
     public void validateUpdateCardRequest(Long cardId, CreditCardRequestDto card) {
-        if (creditCardRepository.existsByCardNumberAndCardIdNot(card.getCardNumber(), cardId))
-            throw new ValidationException(MessageConstants.CARD_NUMBER_ALREADY_EXISTS);
-        if (!isValidCardNumber(card.getCardNumber()))
-            throw new ValidationException(MessageConstants.INVALID_CARD_NUMBER);
-        if (!isValidCvv(card.getCvv()))
-            throw new ValidationException(MessageConstants.INVALID_CVV);
+        validateMandatory(card);
+        isValidCard(card);
+        if (creditCardRepository.existsByCardNumberAndUserIdAndCardIdNot(card.getCardNumber(),card.getUserId(), cardId)) throw new ValidationException(MessageConstants.CARD_NUMBER_ALREADY_EXISTS);
     }
-
+    private void isValidCard(CreditCardRequestDto card) {
+        if (card.getCardNumber().length() < 14 || card.getCardNumber().length() > 16) throw new ValidationException(MessageConstants.INVALID_CARD_NUMBER_LENGTH);
+        if (card.getCvv().length() < 3 || card.getCvv().length() > 4) throw new ValidationException(MessageConstants.INVALID_CVV_LENGTH);
+    }
     public CreditCard validateCardIdAndReturn(Long cardId) {
         Optional<CreditCard> cardOpt = creditCardRepository.findById(cardId);
         if (!cardOpt.isPresent()) throw new ResourceNotFoundException(MessageConstants.CARD_NOT_FOUND);
         return cardOpt.get();
-    }
-
-    private boolean isValidCardNumber(String cardNumber) {
-        return cardNumber != null && cardNumber.matches(ApplicationConstants.CARD_NUMBER_PATTERN);
-    }
-
-    private boolean isValidCvv(String cvv) {
-        return cvv != null && cvv.matches(ApplicationConstants.CVV_PATTERN);
     }
 }

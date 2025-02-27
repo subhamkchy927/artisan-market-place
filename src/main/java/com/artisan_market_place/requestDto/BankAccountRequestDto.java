@@ -15,6 +15,6 @@ public class BankAccountRequestDto {
     private String ifscCode;
     private String bankName;
     private String branchName;
-    private BankAccountTypesEnums accountType;
+    private String accountType;
     private Boolean isActive = true;
 }

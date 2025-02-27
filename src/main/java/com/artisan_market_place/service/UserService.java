@@ -9,7 +9,7 @@ import java.util.List;
 
 @Service
 public interface UserService {
-    public UserResponseDto createUser(UserRequestDto dto,String loginUser);
+    public UserResponseDto createUser(UserRequestDto dto);
     public UserResponseDto updateUser(UserRequestDto dto, Long userId,String loginUser);
     public UserResponseDto getUserById(Long userId,String loginUser);
     public HashMap<String,String> deleteUser(Long userId,String loginUser);
