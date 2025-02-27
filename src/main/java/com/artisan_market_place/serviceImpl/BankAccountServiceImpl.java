@@ -28,7 +28,7 @@ public class BankAccountServiceImpl implements BankAccountService {
     @Transactional(rollbackFor = Throwable.class)
     public BankAccountResponseDto addBankAccount(BankAccountRequestDto dto, String loginUser) {
         bankAccountValidator.validateCreateBankAccountRequest(dto);
-        BankAccount bankAccount = setBankAccountDetails(new BankAccount(), dto);
+        BankAccount bankAccount = setBankAccountDetails(new BankAccount(), dto,loginUser);
         bankAccountRepository.saveAndFlush(bankAccount);
         return getBankAccountDetails(bankAccount);
     }
@@ -38,7 +38,7 @@ public class BankAccountServiceImpl implements BankAccountService {
     public BankAccountResponseDto updateBankAccount(BankAccountRequestDto dto, Long bankAccountId, String loginUser) {
         bankAccountValidator.validateUpdateBankAccountRequest(bankAccountId,dto);
         BankAccount bankAccount = bankAccountValidator.validateBankAccountIdAndReturn(bankAccountId);
-        bankAccount = setBankAccountDetails(bankAccount, dto);
+        bankAccount = setBankAccountDetails(bankAccount, dto,loginUser);
         bankAccountRepository.save(bankAccount);
         return getBankAccountDetails(bankAccount);
     }
@@ -66,7 +66,7 @@ public class BankAccountServiceImpl implements BankAccountService {
         return response;
     }
 
-    private BankAccount setBankAccountDetails(BankAccount bankAccount, BankAccountRequestDto dto) {
+    private BankAccount setBankAccountDetails(BankAccount bankAccount, BankAccountRequestDto dto,String loginUser) {
         bankAccount.setUserId(dto.getUserId());
         bankAccount.setAccountHolderName(dto.getAccountHolderName());
         bankAccount.setAccountNumber(dto.getAccountNumber());
@@ -75,6 +75,7 @@ public class BankAccountServiceImpl implements BankAccountService {
         bankAccount.setBranchName(dto.getBranchName());
         bankAccount.setAccountType(BankAccountTypesEnums.valueOf(dto.getAccountType()));
         bankAccount.setIsActive(dto.getIsActive());
+        bankAccount.setAuditInfo(loginUser);
         return bankAccount;
     }
 

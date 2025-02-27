@@ -20,7 +20,7 @@ public class BankAccountController {
         this.bankAccountService = bankAccountService;
         this.jwtUtil = jwtUtil;
     }
-    @PostMapping
+    @PostMapping("/")
     public ResponseEntity<BankAccountResponseDto> addBankAccount(
             @RequestBody BankAccountRequestDto dto,
             @RequestHeader("Authorization") String token) {

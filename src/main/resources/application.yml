@@ -11,10 +11,9 @@ server:
 logging:
    level:
       org.hibernate: INFO
-      io.swagger: INFO
       org.apache.coyote.http11.Http11InputBuffer: DEBUG
       org.springframework.security: DEBUG
-      com.vhub.sts: DEBUG
+      com.artisan_market_place: DEBUG
 
 
 # mysql connector details
