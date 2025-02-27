@@ -34,7 +34,6 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(rollbackFor = Throwable.class)
     public UserResponseDto createUser(UserRequestDto dto,String loginUser) {
-        userValidator.validateMandatory(dto);
         userValidator.validateCreateUserRequest(dto);
         Users user = new Users();
         user = setUserDetails(user, dto,loginUser);
@@ -47,7 +46,6 @@ public class UserServiceImpl implements UserService {
     @Transactional(rollbackFor = Throwable.class)
     public UserResponseDto updateUser(UserRequestDto dto, Long userId,String loginUser) {
         Users user = userValidator.validateUserIdAndReturn(userId);
-        userValidator.validateMandatory(dto);
         userValidator.validateUpdateUserRequest(userId,dto);
         user = setUserDetails(user,dto,loginUser);
         userRepository.save(user);

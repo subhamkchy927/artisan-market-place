@@ -8,4 +8,5 @@ public class ApplicationConstants {
     public static final String SPECIAL_CHARACTER_PATTERN = ".*[@$!%*?&].*";
     public static final String EMAIL_PATTERN = "^[a-zA-Z0-9]+@[a-zA-Z0-9]+\\.[a-zA-Z]{2,}$";
     public static final String MOBILE_PATTERN = "\\d{10}";
+    public static final String IFSC_PATTERN = "^[A-Z]{4}0[A-Z0-9]{6}$";
 }
