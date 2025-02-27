@@ -19,6 +19,6 @@ public class GlobalValidatorService {
 
     public void validateUserId(Long userId){
       Optional<Users> user = userRepository.findById(userId);
-      if(user.isPresent()) throw new ResourceNotFoundException(MessageConstants.USER_NOT_FOUND);
+      if(!user.isPresent()) throw new ResourceNotFoundException(MessageConstants.USER_NOT_FOUND);
     }
 }

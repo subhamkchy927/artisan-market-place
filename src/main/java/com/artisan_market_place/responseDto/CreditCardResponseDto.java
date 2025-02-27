@@ -11,7 +11,7 @@ public class CreditCardResponseDto {
     private Long userId;
     private String cardHolderName;
     private String cardNumber;
-    private Date expiryDate;
+    private String expiryDate;
     private String cvv;
     private CreditCardTypesEnums cardType;
     private Boolean isActive = true;
