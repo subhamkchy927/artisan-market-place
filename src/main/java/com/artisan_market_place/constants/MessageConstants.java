@@ -29,7 +29,7 @@ public class MessageConstants {
     public static final String BRANCH_NAME_MANDATORY = "Branch name is mandatory.";
     public static final String ACCOUNT_TYPE_MANDATORY = "Account type is mandatory.";
     public static final String ACCOUNT_NUMBER_ALREADY_EXISTS = "Account number already exists.";
-    public static final String INVALID_IFSC_CODE = "Invalid IFSC code. Example of a valid IFSC code: 'SBIN0001234'.";
+    public static final String INVALID_IFSC_CODE = "Invalid IFSC code. it should be 11 charcaters Example of a valid IFSC code: 'SBIN0001234'.";
     public static final String BANK_ACCOUNT_NOT_FOUND = "Bank account not found.";
     public static final String INVALID_ACCOUNT_NUMBER_LENGTH = "Invalid account number length. Bank account numbers typically range from 6 to 18 digits, depending on the bank.";
 

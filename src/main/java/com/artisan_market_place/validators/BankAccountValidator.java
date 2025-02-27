@@ -7,10 +7,12 @@ import com.artisan_market_place.constants.MessageConstants;
 import com.artisan_market_place.entity.BankAccount;
 import com.artisan_market_place.repository.BankAccountRepository;
 import com.artisan_market_place.requestDto.BankAccountRequestDto;
+import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.Optional;
 
+@Service
 public class BankAccountValidator {
     private final BankAccountRepository bankAccountRepository;
     private final GlobalValidatorService globalValidatorService;

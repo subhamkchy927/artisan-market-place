@@ -46,6 +46,10 @@ CREATE TABLE bank_account (
     branch_name VARCHAR(100) NOT NULL,
     account_type VARCHAR(20) NOT NULL, -- Example: 'SAVINGS', 'CURRENT'
     is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    creation_date DATETIME NOT NULL,
+    created_by VARCHAR(128),
+    last_update_date DATETIME NOT NULL,
+    last_updated_by VARCHAR(128),
     CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES user_details(user_id)
 );
 
@@ -59,5 +63,9 @@ CREATE TABLE credit_card (
     cvv VARCHAR(3) NOT NULL,
     card_type VARCHAR(32) NOT NULL, -- Example: 'VISA', 'MASTERCARD', 'RUPAY'
     is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    creation_date DATETIME NOT NULL,
+    created_by VARCHAR(128),
+    last_update_date DATETIME NOT NULL,
+    last_updated_by VARCHAR(128),
     CONSTRAINT fk_credit_card_user FOREIGN KEY (user_id) REFERENCES user_details(user_id)
 );
