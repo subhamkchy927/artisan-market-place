@@ -43,4 +43,5 @@ public class MessageConstants {
     public static final String CARD_NOT_FOUND = "Card not found.";
     public static final String INVALID_CVV_LENGTH = "Invalid CVV length. CVV must be 3 digits for Visa, MasterCard, Discover, JCB, and RuPay, and 4 digits for American Express.";
     public static final String INVALID_CARD_NUMBER_LENGTH = "Invalid card number length. Card numbers must be 16 digits for Visa, MasterCard, Discover, JCB, and RuPay, and 15 digits for American Express.";
+    public static final String ASSOCIATED_USER_ID_MANDATORY = "User Id is mandatory";
 }
