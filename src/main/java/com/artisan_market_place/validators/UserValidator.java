@@ -30,6 +30,7 @@ public class UserValidator{
         if (user.getUserRole() == null)throw new ValidationException(MessageConstants.ROLE_MANDATORY);
     }
     public void validateCreateUserRequest(UserRequestDto user){
+        validateMandatory(user);
         if (userRepository.existsByEmail(user.getEmail()))throw new ValidationException(MessageConstants.EMAIL_ALREADY_EXISTS);
         if (userRepository.existsByPhoneNumber(user.getPhoneNumber()))throw new ValidationException(MessageConstants.PHONE_NUMBER_ALREADY_EXISTS);
         if (!isValidEmail(user.getEmail())) throw new ValidationException(MessageConstants.INVALID_EMAIL_FORMAT);
@@ -37,6 +38,7 @@ public class UserValidator{
         validatePassword(user.getPassword());
     }
     public void validateUpdateUserRequest(Long userId, UserRequestDto user){
+        validateMandatory(user);
         if (userRepository.existsByEmailAndUserIdNot(user.getEmail(),userId)) throw new ValidationException(MessageConstants.EMAIL_ALREADY_EXISTS);
         if (userRepository.existsByPhoneNumberAndUserIdNot(user.getPhoneNumber(),userId)) throw new ValidationException(MessageConstants.PHONE_NUMBER_ALREADY_EXISTS);
         if (!isValidEmail(user.getEmail())) throw new ValidationException(MessageConstants.INVALID_EMAIL_FORMAT);
