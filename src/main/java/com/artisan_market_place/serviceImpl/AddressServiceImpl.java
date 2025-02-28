@@ -5,7 +5,7 @@ import com.artisan_market_place.repository.AddressRepository;
 import com.artisan_market_place.requestDto.AddressRequestDto;
 import com.artisan_market_place.responseDto.AddressResponseDto;
 import com.artisan_market_place.service.AddressService;
-import lombok.Data;
+import com.artisan_market_place.validators.AddressValidator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,14 +17,17 @@ import java.util.stream.Collectors;
 public class AddressServiceImpl implements AddressService {
 
     private final AddressRepository addressRepository;
+    private final AddressValidator addressValidator;
 
-    public AddressServiceImpl(AddressRepository addressRepository) {
+    public AddressServiceImpl(AddressRepository addressRepository, AddressValidator addressValidator) {
         this.addressRepository = addressRepository;
+        this.addressValidator = addressValidator;
     }
 
     @Override
     @Transactional(rollbackFor = Throwable.class)
     public AddressResponseDto createAddress(AddressRequestDto dto,String loginUser) {
+        addressValidator.validateAddress(dto);
         Address address = setAddressDetails(new Address(), dto,loginUser);
         addressRepository.saveAndFlush(address);
         return getAddressDetails(address);
@@ -33,7 +36,8 @@ public class AddressServiceImpl implements AddressService {
     @Override
     @Transactional(rollbackFor = Throwable.class)
     public AddressResponseDto updateAddress(AddressRequestDto dto, Long addressId, String loginUser) {
-        Address address = addressRepository.findById(addressId).orElseThrow(() -> new RuntimeException("Address not found"));
+        addressValidator.validateAddress(dto);
+        Address address = addressValidator.validateAddressIdAndReturn(addressId);
         address = setAddressDetails(address, dto,loginUser);
         addressRepository.saveAndFlush(address);
         return getAddressDetails(address);
@@ -41,7 +45,7 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public AddressResponseDto getAddressById(Long addressId, String loginUser) {
-        Address address = addressRepository.findById(addressId).orElseThrow(() -> new RuntimeException("Address not found"));
+        Address address = addressValidator.validateAddressIdAndReturn(addressId);
         return getAddressDetails(address);
     }
 
@@ -49,7 +53,7 @@ public class AddressServiceImpl implements AddressService {
     @Transactional(rollbackFor = Throwable.class)
     public HashMap<String, String> deleteAddress(Long addressId, String loginUser) {
         HashMap<String, String> response = new HashMap<>();
-        Address address = addressRepository.findById(addressId).orElseThrow(() -> new RuntimeException("Address not found"));
+        Address address = addressValidator.validateAddressIdAndReturn(addressId);
         addressRepository.delete(address);
         response.put("addressId", addressId.toString());
         response.put("Status", "Success");

@@ -44,4 +44,15 @@ public class MessageConstants {
     public static final String INVALID_CVV_LENGTH = "Invalid CVV length. CVV must be 3 digits for Visa, MasterCard, Discover, JCB, and RuPay, and 4 digits for American Express.";
     public static final String INVALID_CARD_NUMBER_LENGTH = "Invalid card number length. Card numbers must be 16 digits for Visa, MasterCard, Discover, JCB, and RuPay, and 15 digits for American Express.";
     public static final String ASSOCIATED_USER_ID_MANDATORY = "User Id is mandatory";
+    public static final String ADDRESS_DATA_CANNOT_BE_NULL = "Address data cannot be null.";
+    public static final String USER_ID_REQUIRED = "User ID is required.";
+    public static final String ADDRESS1_REQUIRED = "Address1 is required.";
+    public static final String CITY_REQUIRED = "City is required.";
+    public static final String STATE_REQUIRED = "State is required.";
+    public static final String COUNTRY_REQUIRED = "Country is required.";
+    public static final String ZIP_CODE_REQUIRED = "Zip code is required.";
+    public static final String INVALID_ZIP_CODE_FORMAT = "Invalid zip code format. Example: 12345 or 12345-6789.";
+    public static final String INVALID_LATITUDE = "Latitude must be between -90 and 90.";
+    public static final String INVALID_LONGITUDE = "Longitude must be between -180 and 180.";
+    public static final String ADDRESS_NOT_FOUND = "Address not found with provided address Id.";
 }
