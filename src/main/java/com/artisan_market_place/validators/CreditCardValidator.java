@@ -13,11 +13,11 @@ import java.util.Optional;
 @Service
 public class CreditCardValidator {
     private final CreditCardRepository creditCardRepository;
-    private final GlobalValidatorService globalValidatorService;
+    private final GlobalValidator globalValidator;
 
-    public CreditCardValidator(CreditCardRepository creditCardRepository, GlobalValidatorService globalValidatorService) {
+    public CreditCardValidator(CreditCardRepository creditCardRepository, GlobalValidator globalValidator) {
         this.creditCardRepository = creditCardRepository;
-        this.globalValidatorService = globalValidatorService;
+        this.globalValidator = globalValidator;
     }
 
     public void validateMandatory(CreditCardRequestDto card) {
@@ -33,14 +33,14 @@ public class CreditCardValidator {
     public void validateCreateCardRequest(CreditCardRequestDto card) {
         validateMandatory(card);
         isValidCard(card);
-        globalValidatorService.validateUserId(card.getUserId());
+        globalValidator.validateUserId(card.getUserId());
         if (creditCardRepository.existsByCardNumberAndUserId(card.getCardNumber(),card.getUserId())) throw new ValidationException(MessageConstants.CARD_NUMBER_ALREADY_EXISTS);
     }
 
     public void validateUpdateCardRequest(Long cardId, CreditCardRequestDto card) {
         validateMandatory(card);
         isValidCard(card);
-        globalValidatorService.validateUserId(card.getUserId());
+        globalValidator.validateUserId(card.getUserId());
         if (creditCardRepository.existsByCardNumberAndUserIdAndCardIdNot(card.getCardNumber(),card.getUserId(), cardId)) throw new ValidationException(MessageConstants.CARD_NUMBER_ALREADY_EXISTS);
     }
     private void isValidCard(CreditCardRequestDto card) {

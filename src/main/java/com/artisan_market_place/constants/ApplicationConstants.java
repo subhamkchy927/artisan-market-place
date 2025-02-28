@@ -14,4 +14,5 @@ public class ApplicationConstants {
     public static final String DATE_FORMAT_MM_DD_YYYY = "MM-dd-yyyy";
     public static final String DATE_FORMAT_MM_YYYY = "MM-yyyy";
     public static final String DATE_FORMAT_YYYY_MM_DD_TIME="yyyy-MM-dd HH:mm:ss";
+    public static final String ZIP_CODE_FORMAT = "^[1-9]\\d{5}$";
 }

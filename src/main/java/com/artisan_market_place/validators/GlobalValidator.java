@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class GlobalValidatorService {
+public class GlobalValidator {
 
     private final UserRepository userRepository;
 
-    public GlobalValidatorService(UserRepository userRepository) {
+    public GlobalValidator(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 

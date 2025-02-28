@@ -2,7 +2,6 @@ package com.artisan_market_place.validators;
 
 import com.artisan_market_place.Exception.ResourceNotFoundException;
 import com.artisan_market_place.Exception.ValidationException;
-import com.artisan_market_place.constants.ApplicationConstants;
 import com.artisan_market_place.constants.MessageConstants;
 import com.artisan_market_place.entity.BankAccount;
 import com.artisan_market_place.repository.BankAccountRepository;
@@ -15,11 +14,11 @@ import java.util.Optional;
 @Service
 public class BankAccountValidator {
     private final BankAccountRepository bankAccountRepository;
-    private final GlobalValidatorService globalValidatorService;
+    private final GlobalValidator globalValidator;
 
-    public BankAccountValidator(BankAccountRepository bankAccountRepository, GlobalValidatorService globalValidatorService) {
+    public BankAccountValidator(BankAccountRepository bankAccountRepository, GlobalValidator globalValidator) {
         this.bankAccountRepository = bankAccountRepository;
-        this.globalValidatorService = globalValidatorService;
+        this.globalValidator = globalValidator;
     }
 
     public void validateMandatory(BankAccountRequestDto bankAccount) {
@@ -36,14 +35,14 @@ public class BankAccountValidator {
     public void validateCreateBankAccountRequest(BankAccountRequestDto bankAccount) {
         validateMandatory(bankAccount);
         validateRequest(bankAccount);
-        globalValidatorService.validateUserId(bankAccount.getUserId());
+        globalValidator.validateUserId(bankAccount.getUserId());
         if (bankAccountRepository.existsByAccountNumberAndUserId(bankAccount.getAccountNumber(),bankAccount.getUserId()))throw new ValidationException(MessageConstants.ACCOUNT_NUMBER_ALREADY_EXISTS);
     }
 
     public void validateUpdateBankAccountRequest(Long bankAccountId, BankAccountRequestDto bankAccount) {
         validateMandatory(bankAccount);
         validateRequest(bankAccount);
-        globalValidatorService.validateUserId(bankAccount.getUserId());
+        globalValidator.validateUserId(bankAccount.getUserId());
         if (bankAccountRepository.existsByAccountNumberAndUserIdAndBankAccountIdNot(bankAccount.getAccountNumber(),bankAccount.getUserId(), bankAccountId))throw new ValidationException(MessageConstants.ACCOUNT_NUMBER_ALREADY_EXISTS);
     }
 

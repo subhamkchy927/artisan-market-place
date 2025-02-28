@@ -16,7 +16,7 @@ public class UserValidator{
 
     private final UserRepository userRepository;
 
-    public UserValidator(UserRepository userRepository, GlobalValidatorService globalValidatorService) {
+    public UserValidator(UserRepository userRepository, GlobalValidator globalValidator) {
         this.userRepository = userRepository;
     }
 
