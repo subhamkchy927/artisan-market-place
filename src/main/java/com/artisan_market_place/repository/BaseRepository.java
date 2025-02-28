@@ -16,13 +16,6 @@ public class BaseRepository {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public List<Object[]> findUsingNativeSQLQuery(String sql, List<Object> params) {
-        return findUsingNativeSQLQuery(sql, params, -1);
-    }
-
-    public List<Object[]> findUsingNativeSQLQuery(String sql, Map<String, Object> paramsMap) {
-        return findUsingNativeSQLQuery(sql, paramsMap, -1);
-    }
 
     public List<Object[]> findUsingNativeSQLQueryList(String sql) {
         Query q = entityManager.createNativeQuery(sql);
@@ -41,8 +34,7 @@ public class BaseRepository {
                     q.setParameter(i, Types.NULL);
                 }
                 i++ ;
-            }
-        }
+            }}
         if(pageSize > 0){
             q.setMaxResults(pageSize);
         }
@@ -63,13 +55,11 @@ public class BaseRepository {
                     q.setParameter(i, Types.NULL);
                 }
                 i++;
-            }
-        }
+            }}
         if (maxRecordCount > 0) {
             q.setMaxResults(maxRecordCount);
         }
         List<Object[]> result = q.getResultList();
-
         return result;
     }
 
@@ -81,14 +71,11 @@ public class BaseRepository {
                     q.setParameter(param, paramsMap.get(param));
                 } else {
                     q.setParameter(param, Types.NULL);
-                }
-            }
-        }
+        }}}
         if (maxRecordCount > 0) {
             q.setMaxResults(maxRecordCount);
         }
         List<Object[]> result = q.getResultList();
-
         return result;
     }
 
