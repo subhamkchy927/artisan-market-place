@@ -11,6 +11,5 @@ import java.util.List;
 public interface BankAccountRepository extends JpaRepository<BankAccount,Long> {
     List<BankAccount> findByUserId(Long userId);
     boolean existsByAccountNumberAndUserId(String accountNumber, Long userId);
-
     boolean existsByAccountNumberAndUserIdAndBankAccountIdNot(String accountNumber, Long userId, Long bankAccountId);
 }
