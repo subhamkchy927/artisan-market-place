@@ -54,7 +54,6 @@ public class BaseRepository {
 
     public List<Object[]> findUsingNativeSQLQuery(String sql, List<Object> params, int maxRecordCount) {
         Query q = entityManager.createNativeQuery(sql);
-
         if (params != null) {
             int i = 1;
             for (Object param : params) {
@@ -76,7 +75,6 @@ public class BaseRepository {
 
     public List<Object[]> findUsingNativeSQLQuery(String sql, Map<String, Object> paramsMap, int maxRecordCount) {
         Query q = entityManager.createNativeQuery(sql);
-
         if (paramsMap != null && paramsMap.size() > 0) {
             for (String param : paramsMap.keySet()) {
                 if (param != null) {
