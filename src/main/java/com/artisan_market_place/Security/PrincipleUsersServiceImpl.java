@@ -14,14 +14,14 @@ import org.springframework.stereotype.Component;
 public class PrincipleUsersServiceImpl implements UserDetailsService {
 
     @Autowired
-    private LoginUserRepository userRepository;
+    private LoginUserRepository userLoginRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(PrincipleUsersServiceImpl.class);
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         logger.debug("Entering in loadUserByUsername Method...");
-        UsersLoginInfo user = userRepository.findByLoginId(username);
+        UsersLoginInfo user = userLoginRepository.findByLoginId(username);
         if(user == null){
             logger.error("Username not found: " + username);
             throw new UsernameNotFoundException("could not found user..!!");

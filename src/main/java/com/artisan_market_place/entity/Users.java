@@ -51,4 +51,7 @@ public class Users extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private UserRolesEnums role;
+
+    @Column(name = "address_id")
+    private Long addressId;
 }

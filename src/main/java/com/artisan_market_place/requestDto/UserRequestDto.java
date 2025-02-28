@@ -19,4 +19,5 @@ public class UserRequestDto {
     private Boolean isApplicationAdmin;
     private String password;
     private String userRole;
+    private AddressRequestDto address;
 }

@@ -7,6 +7,7 @@ import com.artisan_market_place.enums.UserStatusEnums;
 import com.artisan_market_place.repository.LoginUserRepository;
 import com.artisan_market_place.repository.UserRepository;
 import com.artisan_market_place.requestDto.UserRequestDto;
+import com.artisan_market_place.responseDto.AddressResponseDto;
 import com.artisan_market_place.responseDto.UserResponseDto;
 import com.artisan_market_place.service.UserService;
 import com.artisan_market_place.validators.UserValidator;
@@ -16,16 +17,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final AddressServiceImpl addressService;
     private final LoginUserRepository usersLoginInfoRepository;
     private final UserValidator userValidator;
     private final PasswordEncoder encoder;
-    public UserServiceImpl(UserRepository userRepository, LoginUserRepository usersLoginInfoRepository, UserValidator userValidator, PasswordEncoder encoder) {
+    public UserServiceImpl(UserRepository userRepository, AddressServiceImpl addressServiceImpl, AddressServiceImpl addressService, LoginUserRepository usersLoginInfoRepository, UserValidator userValidator, PasswordEncoder encoder) {
         this.userRepository = userRepository;
+        this.addressService = addressService;
         this.usersLoginInfoRepository = usersLoginInfoRepository;
         this.userValidator = userValidator;
         this.encoder = encoder;
@@ -38,6 +40,11 @@ public class UserServiceImpl implements UserService {
         Users user = new Users();
         user = setUserDetails(user, dto,dto.getEmail());
         userRepository.saveAndFlush(user);
+        AddressResponseDto address;
+        if(dto.getAddress() != null){
+        dto.getAddress().setUserId(user.getUserId());
+        addressService.createAddress(dto.getAddress(),dto.getEmail());
+        }
         setLoginInfo(user.getUserId(),dto);
         return getUserDetails(user);
     }
@@ -115,6 +122,7 @@ public class UserServiceImpl implements UserService {
         responseDto.setRating(user.getRating());
         responseDto.setIsApplicationAdmin(user.getIsAdmin());
         responseDto.setCountryCode(user.getCountryCode());
+        responseDto.setAddress(addressService.getAllAddresses(user.getUserId()));
         return responseDto;
     }
 
