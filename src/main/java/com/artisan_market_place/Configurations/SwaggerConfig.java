@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
                 title = "Market Place REST API",
                 description = "Artisan Market Place API.",
                 version = "1.0",
-                contact = @Contact(name = "Artisan Market Place", url = "https://app.artisanmarket.com", email = "support@artisanmarket.com")
+                contact = @Contact(name = "Artisan Market Place", url = "http://localhost:8080/api/session/application-details/", email = "support@artisanmarket.com")
         )
 )
 public class SwaggerConfig {
