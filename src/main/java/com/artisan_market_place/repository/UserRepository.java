@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends JpaRepository<Users, Long>,BaseRepository{
+public interface UserRepository extends JpaRepository<Users, Long>{
 
     @Query("SELECT u FROM Users u WHERE u.email = :email")
     Users findByEmail(@Param("email") String email);
@@ -15,4 +15,5 @@ public interface UserRepository extends JpaRepository<Users, Long>,BaseRepositor
     boolean existsByPhoneNumber(String phoneNumber);
     boolean existsByPhoneNumberAndUserIdNot(String phoneNumber,Long userId);
     boolean existsByEmailAndUserIdNot(String email,Long userId);
+
 }
