@@ -45,5 +45,7 @@ springdoc:
       path: /swagger-ui.html
       operations-sorter: alpha
 
-
+sendgrid:
+   api-key: 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
+   from: subhamkchy927@gmail.com
 
