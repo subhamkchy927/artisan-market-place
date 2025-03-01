@@ -9,6 +9,6 @@ import java.util.Map;
 @Service
 public interface SendGridApiService {
 
-    public void sendEmail(String toEmail, String subject, String message) throws IOException;
+    public void sendEmail(String toEmail, String subject, String message,Long userId) throws IOException;
 
 }

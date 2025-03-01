@@ -1,10 +1,4 @@
-package com.artisan_market_place.repository;
-
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.Query;
-import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
+package com.artisan_market_place.service;
 
 
 import java.util.List;

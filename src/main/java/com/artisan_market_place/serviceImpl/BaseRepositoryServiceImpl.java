@@ -1,6 +1,6 @@
 package com.artisan_market_place.serviceImpl;
 
-import com.artisan_market_place.repository.BaseRepository;
+import com.artisan_market_place.service.BaseRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;

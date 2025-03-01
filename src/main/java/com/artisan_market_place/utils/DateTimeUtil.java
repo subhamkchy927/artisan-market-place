@@ -1,7 +1,5 @@
 package com.artisan_market_place.utils;
 
-import com.artisan_market_place.constants.ApplicationConstants;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;

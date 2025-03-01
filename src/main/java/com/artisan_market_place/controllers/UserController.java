@@ -1,6 +1,7 @@
 package com.artisan_market_place.controllers;
 
 import com.artisan_market_place.Security.JwtUtil;
+import com.artisan_market_place.requestDto.ResetPasswordRequestDto;
 import com.artisan_market_place.requestDto.UserRequestDto;
 import com.artisan_market_place.responseDto.UserResponseDto;
 import com.artisan_market_place.serviceImpl.UserServiceImpl;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -59,5 +61,32 @@ public class UserController {
         List<UserResponseDto> user = userService.getAllUser(isApplicationAdmin,loginUser);
         return ResponseEntity.ok(user);
     }
+
+    @PostMapping("/send-otp")
+    public ResponseEntity<HashMap<String, String>> sendVerificationOtpToUser(
+            @RequestParam String email) throws  IOException {
+
+        log.info("Sending verification OTP to email: {}", email);
+        HashMap<String, String> response = userService.sendVerificationOtpToUser(email);
+        return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/verify-otp")
+    public ResponseEntity<HashMap<String, String>> verifyUserOtp(
+            @RequestParam String email,
+            @RequestParam String otp) {
+        log.info("Verifying OTP for email: {}", email);
+        HashMap<String, String> response = userService.verifyUserOtp(email, otp);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<HashMap<String, String>> resetUserPassword(
+            @RequestBody ResetPasswordRequestDto request) {
+        log.info("Resetting password for email: {}, isForgot: {}", request.getEmail(), false);
+        HashMap<String, String> response = userService.resetUserPassword(request, false);
+        return ResponseEntity.ok(response);
+    }
+}
+
 

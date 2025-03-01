@@ -1,11 +1,17 @@
 package com.artisan_market_place.serviceImpl;
 
+import com.artisan_market_place.Exception.InternalServerErrorException;
+import com.artisan_market_place.Exception.ResourceNotFoundException;
+import com.artisan_market_place.Exception.ValidationException;
+import com.artisan_market_place.constants.MessageConstants;
+import com.artisan_market_place.constants.NotificationConstant;
 import com.artisan_market_place.entity.Users;
 import com.artisan_market_place.entity.UsersLoginInfo;
 import com.artisan_market_place.enums.UserRolesEnums;
 import com.artisan_market_place.enums.UserStatusEnums;
 import com.artisan_market_place.repository.LoginUserRepository;
 import com.artisan_market_place.repository.UserRepository;
+import com.artisan_market_place.requestDto.ResetPasswordRequestDto;
 import com.artisan_market_place.requestDto.UserRequestDto;
 import com.artisan_market_place.responseDto.AddressResponseDto;
 import com.artisan_market_place.responseDto.UserResponseDto;
@@ -15,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,15 +29,21 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final AddressServiceImpl addressService;
+    private final OtpServiceImpl otpServiceImpl;
     private final LoginUserRepository usersLoginInfoRepository;
     private final UserValidator userValidator;
     private final PasswordEncoder encoder;
-    public UserServiceImpl(UserRepository userRepository, AddressServiceImpl addressServiceImpl, AddressServiceImpl addressService, LoginUserRepository usersLoginInfoRepository, UserValidator userValidator, PasswordEncoder encoder) {
+
+    private final SendGridApiServiceImpl sendGridApiService;
+
+    public UserServiceImpl(UserRepository userRepository, AddressServiceImpl addressServiceImpl, AddressServiceImpl addressService, OtpServiceImpl otpServiceImpl, LoginUserRepository usersLoginInfoRepository, UserValidator userValidator, PasswordEncoder encoder, SendGridApiServiceImpl sendGridApiService) {
         this.userRepository = userRepository;
         this.addressService = addressService;
+        this.otpServiceImpl = otpServiceImpl;
         this.usersLoginInfoRepository = usersLoginInfoRepository;
         this.userValidator = userValidator;
         this.encoder = encoder;
+        this.sendGridApiService = sendGridApiService;
     }
 
     @Override
@@ -73,7 +86,7 @@ public class UserServiceImpl implements UserService {
         Users user = userValidator.validateUserIdAndReturn(userId);
         userRepository.delete(user);
         response.put("userId", userId.toString());
-        response.put("Status", "Success");
+        response.put("Status", "User deleted successfully");
         return response;
     }
 
@@ -86,7 +99,51 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
+    public HashMap<String, String> sendVerificationOtpToUser(String email) throws IOException {
+        UsersLoginInfo userLoginInfo = usersLoginInfoRepository.findByLoginId(email);
+        if (userLoginInfo == null) throw new ResourceNotFoundException(MessageConstants.USER_NOT_FOUND);
+        String otp = otpServiceImpl.generateOtp();
+        userLoginInfo.setLastOtp(otp);
+        usersLoginInfoRepository.save(userLoginInfo);
+        String emailSubject = NotificationConstant.USER_OTP_SUBJECT;
+        String otpContent = String.format(MessageConstants.VERIFICATION_OTP_CONTENT, otp);
+        try {
+            sendGridApiService.sendEmail(email, emailSubject, otpContent,userLoginInfo.getUserId());
+        } catch (Exception e) {
+            throw new InternalServerErrorException(MessageConstants.ERRROR_SENDING_EMAIL);
+        }
+        HashMap<String, String> response = new HashMap<>();
+        response.put("message", "OTP sent successfully.");
+        return response;
+    }
 
+    public HashMap<String, String> verifyUserOtp(String email, String otp) {
+        UsersLoginInfo userLoginInfo = usersLoginInfoRepository.findByLoginId(email);
+        if (userLoginInfo == null) throw new ResourceNotFoundException(MessageConstants.USER_NOT_FOUND);
+        Users user = userValidator.validateUserEmailAndReturn(email);
+        if (!otp.equals(userLoginInfo.getLastOtp())) throw new ValidationException(MessageConstants.INVALID_OTP);
+        userLoginInfo.setLastOtp(null);
+        user.setStatus(UserStatusEnums.ACTIVE);
+        usersLoginInfoRepository.save(userLoginInfo);
+        userRepository.save(user);
+        HashMap<String, String> response = new HashMap<>();
+        response.put("message", "OTP verified successfully.");
+        return response;
+    }
+
+    public HashMap<String, String> resetUserPassword(ResetPasswordRequestDto request,Boolean isForgot) {
+        UsersLoginInfo userLoginInfo = usersLoginInfoRepository.findByLoginId(request.getEmail());
+        if (userLoginInfo == null) throw new ResourceNotFoundException(MessageConstants.USER_NOT_FOUND);
+        if(!isForgot){
+            if (!encoder.matches(request.getOldPassword(), userLoginInfo.getPassword())) throw new ValidationException(MessageConstants.INVALID_OLD_PASSWORD);
+        }
+        if (!request.getNewPassword().equals(request.getConfirmPassword())) throw new ValidationException(MessageConstants.PASSWORD_MISMATCH);
+        userLoginInfo.setPassword(encoder.encode(request.getNewPassword()));
+        usersLoginInfoRepository.save(userLoginInfo);
+        HashMap<String, String> response = new HashMap<>();
+        response.put("message", "Password reset successfully.");
+        return response;
+    }
 
     private Users setUserDetails(Users users,UserRequestDto dto,String loginUser) {
         users.setFirirstName(dto.getFirstName());
@@ -96,7 +153,7 @@ public class UserServiceImpl implements UserService {
         users.setCompanyName(dto.getCompanyName());
         users.setGstNumber(dto.getGstNumber());
         users.setEmail(dto.getEmail());
-        users.setStatus(UserStatusEnums.valueOf(dto.getStatus()));
+        users.setStatus(UserStatusEnums.PENDING);
         users.setRating(dto.getUserRating());
         users.setIsAdmin(dto.getIsApplicationAdmin());
         users.setCountryCode(dto.getCountryCode());

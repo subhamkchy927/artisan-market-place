@@ -21,4 +21,7 @@ public class UsersLoginInfo extends BaseEntity{
 
     @Column(name = "password")
     private String password;
+
+    @Column(name = "last_otp")
+    private String lastOtp;
 }
