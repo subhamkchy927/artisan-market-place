@@ -38,7 +38,12 @@ jwt:
    days: 1
    days-ms: 86400000
 
-
+springdoc:
+   api-docs:
+      enabled: true
+   swagger-ui:
+      path: /swagger-ui.html
+      operations-sorter: alpha
 
 
 
