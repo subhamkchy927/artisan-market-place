@@ -6,7 +6,7 @@ import jakarta.persistence.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
-import java.sql.Types;
+
 import java.util.List;
 import java.util.Map;
 
