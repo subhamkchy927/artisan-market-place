@@ -1,4 +1,4 @@
-package com.artisan_market_place.Configurations;
+package com.artisan_market_place.configurations;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Contact;

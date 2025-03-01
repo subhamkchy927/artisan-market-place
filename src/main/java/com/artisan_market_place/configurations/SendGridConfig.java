@@ -1,4 +1,4 @@
-package com.artisan_market_place.Configurations;
+package com.artisan_market_place.configurations;
 
 import com.sendgrid.SendGrid;
 import org.springframework.beans.factory.annotation.Value;
