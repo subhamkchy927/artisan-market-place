@@ -55,4 +55,5 @@ public class MessageConstants {
     public static final String INVALID_LATITUDE = "Latitude must be between -90 and 90.";
     public static final String INVALID_LONGITUDE = "Longitude must be between -180 and 180.";
     public static final String ADDRESS_NOT_FOUND = "Address not found with provided address Id.";
+    public static final String ERRROR_SENDING_EMAIL = "Error in sending email";
 }

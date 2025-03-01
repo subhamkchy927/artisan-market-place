@@ -1,5 +1,7 @@
 package com.artisan_market_place.serviceImpl;
 
+import com.artisan_market_place.Exception.InternalServerErrorException;
+import com.artisan_market_place.constants.MessageConstants;
 import com.artisan_market_place.service.SendGridApiService;
 import com.sendgrid.SendGrid;
 import com.sendgrid.*;
@@ -34,7 +36,7 @@ public class SendGridApiServiceImpl implements SendGridApiService {
             request.setBody(mail.build());
             sendGrid.api(request);
         } catch (IOException ex) {
-            throw new RuntimeException("Error sending email", ex);
+            throw new InternalServerErrorException(MessageConstants.ERRROR_SENDING_EMAIL);
         }
     }
 }
