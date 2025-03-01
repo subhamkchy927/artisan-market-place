@@ -51,7 +51,7 @@ public class MessageConstants {
     public static final String STATE_REQUIRED = "State is required.";
     public static final String COUNTRY_REQUIRED = "Country is required.";
     public static final String ZIP_CODE_REQUIRED = "Zip code is required.";
-    public static final String INVALID_ZIP_CODE_FORMAT = "Invalid zip code format. Example: 12345 or 12345-6789.";
+    public static final String INVALID_ZIP_CODE_FORMAT = "Invalid zip code format. Example: 123456";
     public static final String INVALID_LATITUDE = "Latitude must be between -90 and 90.";
     public static final String INVALID_LONGITUDE = "Longitude must be between -180 and 180.";
     public static final String ADDRESS_NOT_FOUND = "Address not found with provided address Id.";
