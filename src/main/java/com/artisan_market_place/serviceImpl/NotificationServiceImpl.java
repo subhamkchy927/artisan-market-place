@@ -5,7 +5,9 @@ import com.artisan_market_place.enums.NotificationStatusEnums;
 import com.artisan_market_place.repository.NotificationDetailsRepository;
 import com.artisan_market_place.requestDto.NotificationRequestDto;
 import com.artisan_market_place.service.NotificationService;
+import org.springframework.stereotype.Service;
 
+@Service
 public class NotificationServiceImpl implements NotificationService {
     private final NotificationDetailsRepository notificationDetailsRepository;
 
@@ -14,7 +16,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public void addIntoNotification(Long userId, String subject, String content) {
+    public void addIntoNotification(Long userId, String subject, String content,String email) {
         NotificationDetails notificationDetails = new NotificationDetails();
         notificationDetails.setUserId(userId);
         notificationDetails.setIsEmail(true);
@@ -22,6 +24,7 @@ public class NotificationServiceImpl implements NotificationService {
         notificationDetails.setSubject(subject);
         notificationDetails.setContent(content);
         notificationDetails.setStatus(NotificationStatusEnums.SUCCESS);
+        notificationDetails.setAuditInfo(email);
         notificationDetailsRepository.save(notificationDetails);
     }
 }

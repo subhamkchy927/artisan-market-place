@@ -6,8 +6,10 @@ import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import org.springframework.stereotype.Service;
 
+@Service
 public interface NotificationService{
 
-    public void addIntoNotification(Long userId, String subject, String content);
+    public void addIntoNotification(Long userId, String subject, String content,String email);
 }

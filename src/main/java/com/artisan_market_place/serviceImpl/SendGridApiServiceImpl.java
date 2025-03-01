@@ -43,7 +43,7 @@ public class SendGridApiServiceImpl implements SendGridApiService {
             throw new InternalServerErrorException(MessageConstants.ERRROR_SENDING_EMAIL);
         }
         try {
-            notificationService.addIntoNotification(userId, subject, message);
+            notificationService.addIntoNotification(userId, subject, message,toEmail);
         } catch (Exception ex) {
             log.info(MessageConstants.ERRROR_STORING_EMAIL_EMAIL);
         }

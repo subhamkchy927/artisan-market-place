@@ -164,4 +164,10 @@ CREATE TABLE notification_details (
     is_sms BOOLEAN NOT NULL,
     content TEXT NOT NULL,
     status VARCHAR(32) NOT NULL,
+    creation_date DATETIME NOT NULL,
+    created_by VARCHAR(128),
+    last_update_date DATETIME NOT NULL,
+    last_updated_by VARCHAR(128),
     CONSTRAINT fk_user_notification FOREIGN KEY (user_id) REFERENCES user_details(user_id) ON DELETE CASCADE);
+
+ALTER TABLE user_login_info ADD COLUMN last_otp VARCHAR(4);

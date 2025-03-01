@@ -58,7 +58,7 @@ public class MessageConstants {
     public static final String ERRROR_SENDING_EMAIL = "Error in sending email";
     public static final String VERIFICATION_OTP_CONTENT = "Dear User, your OTP for verification is: %s. Please do not share this with anyone. This OTP is valid for 10 minutes.";
     public static final String ERRROR_STORING_EMAIL_EMAIL = "Error in storing email details";
-    public static final String INVALID_OTP = "Invalid";
+    public static final String INVALID_OTP = "Invalid/Expired Otp";
     public static final String INVALID_OLD_PASSWORD = "Invalid old password";
     public static final String PASSWORD_MISMATCH = "Entered passwrod and confirmed password mismatch";
 }

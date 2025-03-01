@@ -23,24 +23,18 @@ public class UserValidator {
 
     public void validateMandatory(UserRequestDto user) {
         if (user == null) throw new ValidationException(MessageConstants.USER_OBJECT_NULL);
-        if (!StringUtils.hasText(user.getFirstName()))
-            throw new ValidationException(MessageConstants.FIRST_NAME_MANDATORY);
+        if (!StringUtils.hasText(user.getFirstName())) throw new ValidationException(MessageConstants.FIRST_NAME_MANDATORY);
         if (!StringUtils.hasText(user.getEmail())) throw new ValidationException(MessageConstants.EMAIL_MANDATORY);
-        if (!StringUtils.hasText(user.getPhoneNumber()))
-            throw new ValidationException(MessageConstants.PHONE_NUMBER_MANDATORY);
-        if (user.getStatus() == null) throw new ValidationException(MessageConstants.STATUS_MANDATORY);
+        if (!StringUtils.hasText(user.getPhoneNumber())) throw new ValidationException(MessageConstants.PHONE_NUMBER_MANDATORY);
         if (user.getUserRole() == null) throw new ValidationException(MessageConstants.ROLE_MANDATORY);
     }
 
     public void validateCreateUserRequest(UserRequestDto user) {
         validateMandatory(user);
-        if (userRepository.existsByEmail(user.getEmail()))
-            throw new ValidationException(MessageConstants.EMAIL_ALREADY_EXISTS);
-        if (userRepository.existsByPhoneNumber(user.getPhoneNumber()))
-            throw new ValidationException(MessageConstants.PHONE_NUMBER_ALREADY_EXISTS);
+        if (userRepository.existsByEmail(user.getEmail())) throw new ValidationException(MessageConstants.EMAIL_ALREADY_EXISTS);
+        if (userRepository.existsByPhoneNumber(user.getPhoneNumber())) throw new ValidationException(MessageConstants.PHONE_NUMBER_ALREADY_EXISTS);
         if (!isValidEmail(user.getEmail())) throw new ValidationException(MessageConstants.INVALID_EMAIL_FORMAT);
-        if (!isValidPhoneNumber(user.getPhoneNumber()))
-            throw new ValidationException(MessageConstants.INVALID_PHONE_NUMBER);
+        if (!isValidPhoneNumber(user.getPhoneNumber())) throw new ValidationException(MessageConstants.INVALID_PHONE_NUMBER);
         validatePassword(user.getPassword());
     }
 
