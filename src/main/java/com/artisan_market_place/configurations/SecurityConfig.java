@@ -1,5 +1,7 @@
-package com.artisan_market_place.Security;
+package com.artisan_market_place.configurations;
 
+import com.artisan_market_place.Security.JwtAuthFilter;
+import com.artisan_market_place.Security.PrincipleUsersServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,14 +25,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig{
          @Autowired
          JwtAuthFilter jwtAuthFilter;
-
         @Bean
         public UserDetailsService userDetailsService() {
             return new PrincipleUsersServiceImpl();
         }
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        @Bean
+        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
@@ -43,7 +44,7 @@ public class SecurityConfig{
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
-    }
+        }
 
         @Bean
         public PasswordEncoder passwordEncoder() {
