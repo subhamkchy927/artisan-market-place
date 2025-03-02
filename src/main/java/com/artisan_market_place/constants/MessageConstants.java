@@ -62,4 +62,5 @@ public class MessageConstants {
     public static final String INVALID_OLD_PASSWORD = "Invalid old password";
     public static final String PASSWORD_MISMATCH = "Entered passwrod and confirmed password mismatch";
     public static final String ERROR_SENDING_SMS = "Error sending text sms";
+    public static final String COUNTRY_CODE_MANDATORY = "Country code is mandatory";
 }

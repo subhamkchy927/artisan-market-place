@@ -26,6 +26,7 @@ public class UserValidator {
         if (!StringUtils.hasText(user.getFirstName())) throw new ValidationException(MessageConstants.FIRST_NAME_MANDATORY);
         if (!StringUtils.hasText(user.getEmail())) throw new ValidationException(MessageConstants.EMAIL_MANDATORY);
         if (!StringUtils.hasText(user.getPhoneNumber())) throw new ValidationException(MessageConstants.PHONE_NUMBER_MANDATORY);
+        if (!StringUtils.hasText(user.getCountryCode())) throw new ValidationException(MessageConstants.COUNTRY_CODE_MANDATORY);
         if (user.getUserRole() == null) throw new ValidationException(MessageConstants.ROLE_MANDATORY);
     }
 
