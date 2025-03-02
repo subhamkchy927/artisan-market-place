@@ -16,11 +16,15 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public void addIntoNotification(Long userId, String subject, String content,String email) {
+    public void addIntoNotification(Long userId, String subject, String content,String email,Boolean isSms) {
         NotificationDetails notificationDetails = new NotificationDetails();
         notificationDetails.setUserId(userId);
         notificationDetails.setIsEmail(true);
         notificationDetails.setIsSms(false);
+        if(isSms){
+        notificationDetails.setIsEmail(false);
+        notificationDetails.setIsSms(true);
+        }
         notificationDetails.setSubject(subject);
         notificationDetails.setContent(content);
         notificationDetails.setStatus(NotificationStatusEnums.SUCCESS);

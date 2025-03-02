@@ -11,5 +11,5 @@ import org.springframework.stereotype.Service;
 @Service
 public interface NotificationService{
 
-    public void addIntoNotification(Long userId, String subject, String content,String email);
+    public void addIntoNotification(Long userId, String subject, String content,String email,Boolean isSms);
 }

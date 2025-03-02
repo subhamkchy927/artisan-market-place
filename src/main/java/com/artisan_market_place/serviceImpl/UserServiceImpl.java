@@ -17,6 +17,7 @@ import com.artisan_market_place.responseDto.AddressResponseDto;
 import com.artisan_market_place.responseDto.UserResponseDto;
 import com.artisan_market_place.service.UserService;
 import com.artisan_market_place.validators.UserValidator;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final AddressServiceImpl addressService;
@@ -33,16 +35,17 @@ public class UserServiceImpl implements UserService {
     private final LoginUserRepository usersLoginInfoRepository;
     private final UserValidator userValidator;
     private final PasswordEncoder encoder;
-
+    private final TwilioServiceImpl twilioService;
     private final SendGridApiServiceImpl sendGridApiService;
 
-    public UserServiceImpl(UserRepository userRepository, AddressServiceImpl addressServiceImpl, AddressServiceImpl addressService, OtpServiceImpl otpServiceImpl, LoginUserRepository usersLoginInfoRepository, UserValidator userValidator, PasswordEncoder encoder, SendGridApiServiceImpl sendGridApiService) {
+    public UserServiceImpl(UserRepository userRepository, AddressServiceImpl addressServiceImpl, AddressServiceImpl addressService, OtpServiceImpl otpServiceImpl, LoginUserRepository usersLoginInfoRepository, UserValidator userValidator, PasswordEncoder encoder, TwilioServiceImpl twilioService, SendGridApiServiceImpl sendGridApiService) {
         this.userRepository = userRepository;
         this.addressService = addressService;
         this.otpServiceImpl = otpServiceImpl;
         this.usersLoginInfoRepository = usersLoginInfoRepository;
         this.userValidator = userValidator;
         this.encoder = encoder;
+        this.twilioService = twilioService;
         this.sendGridApiService = sendGridApiService;
     }
 
@@ -99,18 +102,25 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
-    public HashMap<String, String> sendVerificationOtpToUser(String email) throws IOException {
-        UsersLoginInfo userLoginInfo = usersLoginInfoRepository.findByLoginId(email);
-        if (userLoginInfo == null) throw new ResourceNotFoundException(MessageConstants.USER_NOT_FOUND);
+    public HashMap<String, String> sendVerificationOtpToUser(String email,String phonNumber) throws IOException {
+        Users user = userRepository.findByEmailOrPhoneNumber(email,phonNumber);
+        if (user == null) throw new ResourceNotFoundException(MessageConstants.USER_NOT_FOUND);
+        UsersLoginInfo userLoginInfo = usersLoginInfoRepository.findByLoginId(user.getEmail());
         String otp = otpServiceImpl.generateOtp();
+        String phoneNumber = user.getCountryCode().concat(user.getPhoneNumber());
         userLoginInfo.setLastOtp(otp);
         usersLoginInfoRepository.save(userLoginInfo);
-        String emailSubject = NotificationConstant.USER_OTP_SUBJECT;
+        String subject = NotificationConstant.USER_OTP_SUBJECT;
         String otpContent = String.format(MessageConstants.VERIFICATION_OTP_CONTENT, otp);
         try {
-            sendGridApiService.sendEmail(email, emailSubject, otpContent,userLoginInfo.getUserId());
+            sendGridApiService.sendEmail(user.getEmail(), subject, otpContent,user.getUserId());
         } catch (Exception e) {
-            throw new InternalServerErrorException(MessageConstants.ERRROR_SENDING_EMAIL);
+            log.info (MessageConstants.ERRROR_SENDING_EMAIL,e.getMessage());
+        }
+        try {
+            twilioService.sendSms(user.getUserId(),subject,email, phoneNumber, otpContent);
+        } catch (Exception e) {
+            log.info (MessageConstants.ERROR_SENDING_SMS,e.getMessage());
         }
         HashMap<String, String> response = new HashMap<>();
         response.put("message", "OTP sent successfully.");
@@ -134,9 +144,7 @@ public class UserServiceImpl implements UserService {
     public HashMap<String, String> resetUserPassword(ResetPasswordRequestDto request,Boolean isForgot) {
         UsersLoginInfo userLoginInfo = usersLoginInfoRepository.findByLoginId(request.getEmail());
         if (userLoginInfo == null) throw new ResourceNotFoundException(MessageConstants.USER_NOT_FOUND);
-        if(!isForgot){
-            if (!encoder.matches(request.getOldPassword(), userLoginInfo.getPassword())) throw new ValidationException(MessageConstants.INVALID_OLD_PASSWORD);
-        }
+        if(!isForgot && !encoder.matches(request.getOldPassword(), userLoginInfo.getPassword())) throw new ValidationException(MessageConstants.INVALID_OLD_PASSWORD);
         if (!request.getNewPassword().equals(request.getConfirmPassword())) throw new ValidationException(MessageConstants.PASSWORD_MISMATCH);
         userLoginInfo.setPassword(encoder.encode(request.getNewPassword()));
         usersLoginInfoRepository.save(userLoginInfo);

@@ -64,9 +64,10 @@ public class UserController {
 
     @PostMapping("/send-otp")
     public ResponseEntity<HashMap<String, String>> sendVerificationOtpToUser(
-            @RequestParam String email) throws  IOException {
+            @RequestParam (name = "email",required = false) String email,
+            @RequestParam (name = "phoneNumber",required = false) String phoneNumber) throws  IOException {
         log.info("Sending verification OTP to email: {}", email);
-        HashMap<String, String> response = userService.sendVerificationOtpToUser(email);
+        HashMap<String, String> response = userService.sendVerificationOtpToUser(email,phoneNumber);
         return ResponseEntity.ok(response);
     }
 

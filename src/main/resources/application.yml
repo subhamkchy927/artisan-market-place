@@ -49,3 +49,8 @@ sendgrid:
    api-key: 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
    from: subhamkchy927@gmail.com
 
+twilio:
+   auth-token: aaee9e85562d1c543ef94c60f29274d2
+   account-sid: AC9e6b78103aee390f98b865d2850eeff9
+   sender-phone: +18046766676
+
