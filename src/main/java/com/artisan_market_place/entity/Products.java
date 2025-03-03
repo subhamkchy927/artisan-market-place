@@ -16,7 +16,7 @@ public class Products extends BaseEntity{
     private Long productId;
 
     @Column(name = "user_id", nullable = false, unique = true, length = 255)
-    private String user_id;
+    private String userId;
 
     @Column(name = "name", nullable = false, unique = true, length = 255)
     private String name;
@@ -33,22 +33,25 @@ public class Products extends BaseEntity{
     @Column(name = "stock_quantity", nullable = false)
     private Integer stockQuantity;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "category", nullable = false, length = 100)
     private String category;
 
     @Column(name = "brand", nullable = false, length = 100)
     private String brand;
 
-    @Column(name = "weight", nullable = false)
+    @Column(name = "weight")
     private Double weight;
 
-    @Column(name = "dimensions", nullable = false, length = 50)
+    @Column(name = "dimensions", length = 50)
     private String dimensions;
 
     @Column(name = "status", nullable = false, length = 50)
     private String status;
 
+    @Column(name = "color", nullable = false, length = 32)
+    private String color;
+
     @Column(name = "product_type", nullable = false, length = 50)
     private String productType;
-
 }
