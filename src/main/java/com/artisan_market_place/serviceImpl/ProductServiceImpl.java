@@ -11,7 +11,7 @@ import com.artisan_market_place.requestDto.SearchProductRequestDto;
 import com.artisan_market_place.responseDto.ProdcutImagesResponseDto;
 import com.artisan_market_place.responseDto.ProdcutResponseDto;
 import com.artisan_market_place.responseDto.SearchProductResponseDto;
-import com.artisan_market_place.service.ProdcutsService;
+import com.artisan_market_place.service.ProdcuctService;
 import com.artisan_market_place.validators.ProductValidator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,12 +21,12 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class ProdcutsServiceImpl implements ProdcutsService {
+public class ProductServiceImpl implements ProdcuctService {
     private final ProductsRepositoryImpl productsRepository;
     private final ProductValidator productValidator;
     private final ProdcutImagesRepository productImagesRepository;
 
-    public ProdcutsServiceImpl(ProductsRepositoryImpl productsRepository, ProductValidator productValidator, ProdcutImagesRepository productImagesRepository) {
+    public ProductServiceImpl(ProductsRepositoryImpl productsRepository, ProductValidator productValidator, ProdcutImagesRepository productImagesRepository) {
         this.productsRepository = productsRepository;
         this.productValidator = productValidator;
         this.productImagesRepository = productImagesRepository;

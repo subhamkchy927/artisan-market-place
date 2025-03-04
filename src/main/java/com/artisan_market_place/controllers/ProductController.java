@@ -3,7 +3,7 @@ package com.artisan_market_place.controllers;
 import com.artisan_market_place.Security.JwtUtil;
 import com.artisan_market_place.requestDto.ProductRequestDto;
 import com.artisan_market_place.responseDto.ProdcutResponseDto;
-import com.artisan_market_place.serviceImpl.ProdcutsServiceImpl;
+import com.artisan_market_place.serviceImpl.ProductServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,10 +15,10 @@ import java.util.List;
 @Slf4j
 public class ProductController {
 
-    private final ProdcutsServiceImpl productService;
+    private final ProductServiceImpl productService;
     private final JwtUtil jwtUtil;
 
-    public ProductController(ProdcutsServiceImpl productService, JwtUtil jwtUtil) {
+    public ProductController(ProductServiceImpl productService, JwtUtil jwtUtil) {
         this.productService = productService;
         this.jwtUtil = jwtUtil;
     }

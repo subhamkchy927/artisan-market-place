@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @Service
-public interface ProdcutsService {
+public interface ProdcuctService {
     ProdcutResponseDto createProduct(ProductRequestDto dto, String loginUser);
     ProdcutResponseDto updateProduct(ProductRequestDto dto, Long productId, String loginUser);
     ProdcutResponseDto getProductById(Long productId, String loginUser);
