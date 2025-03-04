@@ -11,9 +11,7 @@ import java.util.*;
 @Repository
 public interface ProductsRepositoryImpl extends JpaRepository<Products,Long>,BaseRepository {
 
-    @Query("SELECT p FROM Products p " +
-           "WHERE (:userId IS NULL OR p.userId = :userId) " +
-           "AND (:category IS NULL OR p.category = :category)")
+    @Query("SELECT p FROM Products p WHERE (:userId IS NULL OR p.userId = :userId) AND (:category IS NULL OR p.category = :category)")
     List<Products> findByUserIdAndCategory(@Param("userId") Long userId, @Param("category") String category);
     boolean existsByNameAndCategoryAndBrandAndWeightAndDimensionsAndColorAndUserId(String name, String category, String brand, Double weight, String dimensions, String color, Long userId);
     boolean existsByNameAndCategoryAndBrandAndWeightAndDimensionsAndColorAndUserIdAndProductIdNot(String name, String category, String brand, Double weight, String dimensions, String color, Long userId, Long productId);
