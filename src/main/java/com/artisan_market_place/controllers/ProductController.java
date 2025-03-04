@@ -2,7 +2,9 @@ package com.artisan_market_place.controllers;
 
 import com.artisan_market_place.Security.JwtUtil;
 import com.artisan_market_place.requestDto.ProductRequestDto;
+import com.artisan_market_place.requestDto.SearchProductRequestDto;
 import com.artisan_market_place.responseDto.ProdcutResponseDto;
+import com.artisan_market_place.responseDto.SearchProductResponseDto;
 import com.artisan_market_place.serviceImpl.ProductServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -83,4 +85,17 @@ public class ProductController {
         List<ProdcutResponseDto> response = productService.getProductsByCategory(userId, category, loginUser);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<SearchProductResponseDto>> searchProducts(
+            @RequestParam(name = "pageSize", required = false, defaultValue = "100") int pageSize,
+            @RequestParam(name = "pageNumber", required = false, defaultValue = "0") int pageNumber,
+            @RequestBody SearchProductRequestDto searchRequest,
+            @RequestHeader(value = "Authorization") String token) {
+        log.info("Searching products with filters: {} on page: {} with size: {}", searchRequest, pageNumber, pageSize);
+        String loginUser = jwtUtil.extractUsername(token);
+        List<SearchProductResponseDto> response = productService.searchProducts(searchRequest, pageSize, pageNumber);
+        return ResponseEntity.ok(response);
+    }
+
 }
