@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 public class ProdcutResponseDto {
     private Long productId;
-    private String userId;
+    private Long userId;
     private String name;
     private String description;
     private BigDecimal price;

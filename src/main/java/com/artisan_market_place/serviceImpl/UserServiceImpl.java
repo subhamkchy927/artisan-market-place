@@ -127,10 +127,10 @@ public class UserServiceImpl implements UserService {
         return response;
     }
 
-    public HashMap<String, String> verifyUserOtp(String email, String otp) {
-        UsersLoginInfo userLoginInfo = usersLoginInfoRepository.findByLoginId(email);
-        if (userLoginInfo == null) throw new ResourceNotFoundException(MessageConstants.USER_NOT_FOUND);
-        Users user = userValidator.validateUserEmailAndReturn(email);
+    public HashMap<String, String> verifyUserOtp(String email,String phonNumber, String otp) {
+        Users user = userRepository.findByEmailOrPhoneNumber(email,phonNumber);
+        if (user == null) throw new ResourceNotFoundException(MessageConstants.USER_NOT_FOUND);
+        UsersLoginInfo userLoginInfo = usersLoginInfoRepository.findByLoginId(user.getEmail());
         if (!otp.equals(userLoginInfo.getLastOtp())) throw new ValidationException(MessageConstants.INVALID_OTP);
         userLoginInfo.setLastOtp(null);
         user.setStatus(UserStatusEnums.ACTIVE);

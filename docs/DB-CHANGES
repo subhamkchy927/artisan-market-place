@@ -12,7 +12,7 @@ CREATE TABLE user_details (
     company_name VARCHAR(128),
     gst_number VARCHAR(32),
     status VARCHAR(16) NOT NULL,
-    rating VARCHAR(16),
+    rating INT,
     is_admin BOOLEAN,
     country_code VARCHAR(8),
     role VARCHAR(32),

@@ -11,7 +11,7 @@ import java.util.List;
 
 @Data
 public class ProductRequestDto {
-    private String userId;
+    private Long userId;
     private String name;
     private String description;
     private BigDecimal price;

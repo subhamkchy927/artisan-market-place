@@ -3,6 +3,7 @@ package com.artisan_market_place.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
@@ -31,13 +32,13 @@ public class ProductOffers extends BaseEntity{
     private Double percentageDiscount;
 
     @Column(name = "flat_discount", nullable = true)
-    private Double flatDiscount;
+    private BigDecimal flatDiscount;
 
     @Column(name = "max_discount_amount", nullable = true)
-    private Double maxDiscountAmount;
+    private BigDecimal maxDiscountAmount;
 
     @Column(name = "min_purchase_amount", nullable = true)
-    private Double minPurchaseAmount;
+    private BigDecimal minPurchaseAmount;
 
     @Column(name = "start_date", nullable = false)
     private Date startTime;

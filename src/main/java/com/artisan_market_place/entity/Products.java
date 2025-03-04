@@ -1,5 +1,6 @@
 package com.artisan_market_place.entity;
 
+import com.artisan_market_place.enums.ProductCatogeryEnums;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -16,7 +17,7 @@ public class Products extends BaseEntity{
     private Long productId;
 
     @Column(name = "user_id", nullable = false, unique = true, length = 255)
-    private String userId;
+    private Long userId;
 
     @Column(name = "name", nullable = false, unique = true, length = 255)
     private String name;
@@ -35,7 +36,7 @@ public class Products extends BaseEntity{
 
     @Enumerated(EnumType.STRING)
     @Column(name = "category", nullable = false, length = 100)
-    private String category;
+    private ProductCatogeryEnums category;
 
     @Column(name = "brand", nullable = false, length = 100)
     private String brand;

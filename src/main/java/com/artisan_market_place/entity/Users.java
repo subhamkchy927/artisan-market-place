@@ -40,7 +40,7 @@ public class Users extends BaseEntity {
     private UserStatusEnums status;
 
     @Column(name = "rating")
-    private String rating;
+    private Double rating;
 
     @Column(name = "is_admin")
     private Boolean isAdmin;

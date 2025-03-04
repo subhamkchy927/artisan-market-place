@@ -5,10 +5,7 @@ public class MessageConstants {
     public static final String FIRST_NAME_MANDATORY = "First name is mandatory.";
     public static final String EMAIL_MANDATORY = "Email is mandatory.";
     public static final String PHONE_NUMBER_MANDATORY = "Phone number is mandatory.";
-    public static final String STATUS_MANDATORY = "User status is mandatory.";
     public static final String ROLE_MANDATORY = "User role is mandatory.";
-
-    public static final String INVALID_LOGIN_CREDENTIAL = "Invalid Login Credential!";
     public static final String L1000 = "L1000";
     public static final String EMAIL_ALREADY_EXISTS = "User Already exist with email";
     public static final String PHONE_NUMBER_ALREADY_EXISTS = "User Already exist with this phone number";
@@ -63,4 +60,15 @@ public class MessageConstants {
     public static final String PASSWORD_MISMATCH = "Entered passwrod and confirmed password mismatch";
     public static final String ERROR_SENDING_SMS = "Error sending text sms";
     public static final String COUNTRY_CODE_MANDATORY = "Country code is mandatory";
+    public static final String PRODUCT_OBJECT_NULL = "Product object cannot be null.";
+    public static final String SELLER_ID_MANDATORY = "Seller ID is mandatory.";
+    public static final String PRODUCT_NAME_MANDATORY = "Product name is mandatory.";
+    public static final String PRODUCT_CATEGORY_MANDATORY = "Product category is mandatory.";
+    public static final String PRODUCT_BRAND_MANDATORY = "Product brand is mandatory.";
+    public static final String PRODUCT_PRICE_INVALID = "Product price must be greater than zero.";
+    public static final String PRODUCT_QUANTITY_INVALID = "Product quantity cannot be negative.";
+    public static final String PRODUCT_ALREADY_EXISTS = "A product with the same values already exists.";
+    public static final String ONLY_ADMIN_SELLER_CAN_ADD_UPDATE_PRODUCT = "Only Admin, Seller, or Seller-Customer can add or update a product.";
+    public static final String PRODUCT_NOT_FOUND = "Product not found.";
+
 }

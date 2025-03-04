@@ -73,10 +73,11 @@ public class UserController {
 
     @PostMapping("/verify-otp")
     public ResponseEntity<HashMap<String, String>> verifyUserOtp(
-            @RequestParam String email,
+            @RequestParam (name = "email",required = false) String email,
+            @RequestParam (name = "phoneNumber",required = false) String phoneNumber,
             @RequestParam String otp) {
         log.info("Verifying OTP for email: {}", email);
-        HashMap<String, String> response = userService.verifyUserOtp(email, otp);
+        HashMap<String, String> response = userService.verifyUserOtp(email,phoneNumber, otp);
         return ResponseEntity.ok(response);
     }
 

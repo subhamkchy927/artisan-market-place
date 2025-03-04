@@ -1,25 +1,26 @@
-package com.artisan_market_place.serviceImpl;
+package com.artisan_market_place.repository;
 
-import com.artisan_market_place.service.BaseRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
+import org.springframework.stereotype.Repository;
 
 import java.sql.Types;
 import java.util.List;
 import java.util.Map;
 
-public class BaseRepositoryServiceImpl implements BaseRepository {
+@Repository
+public class BaseRepositoryImpl implements BaseRepository {
     @PersistenceContext
     private EntityManager entityManager;
 
-
+    @Override
     public List<Object[]> findUsingNativeSQLQueryList(String sql) {
         Query q = entityManager.createNativeQuery(sql);
-        List<Object[]> result = q.getResultList();
-        return result;
+        return q.getResultList();
     }
 
+    @Override
     public List<Object[]> findUsingNativeSQLQuery(String sql, List<Object> params, int pageSize, int pageNumber) {
         Query q = entityManager.createNativeQuery(sql);
         if (params != null) {
@@ -42,6 +43,7 @@ public class BaseRepositoryServiceImpl implements BaseRepository {
         return q.getResultList();
     }
 
+    @Override
     public List<Object[]> findUsingNativeSQLQuery(String sql, List<Object> params, int maxRecordCount) {
         Query q = entityManager.createNativeQuery(sql);
         if (params != null) {
@@ -58,25 +60,24 @@ public class BaseRepositoryServiceImpl implements BaseRepository {
         if (maxRecordCount > 0) {
             q.setMaxResults(maxRecordCount);
         }
-        List<Object[]> result = q.getResultList();
-        return result;
+        return q.getResultList();
     }
 
+    @Override
     public List<Object[]> findUsingNativeSQLQuery(String sql, Map<String, Object> paramsMap, int maxRecordCount) {
         Query q = entityManager.createNativeQuery(sql);
-        if (paramsMap != null && paramsMap.size() > 0) {
-            for (String param : paramsMap.keySet()) {
-                if (param != null) {
-                    q.setParameter(param, paramsMap.get(param));
+        if (paramsMap != null && !paramsMap.isEmpty()) {
+            for (Map.Entry<String, Object> entry : paramsMap.entrySet()) {
+                if (entry.getValue() != null) {
+                    q.setParameter(entry.getKey(), entry.getValue());
                 } else {
-                    q.setParameter(param, Types.NULL);
+                    q.setParameter(entry.getKey(), Types.NULL);
                 }
             }
         }
         if (maxRecordCount > 0) {
             q.setMaxResults(maxRecordCount);
         }
-        List<Object[]> result = q.getResultList();
-        return result;
+        return q.getResultList();
     }
 }

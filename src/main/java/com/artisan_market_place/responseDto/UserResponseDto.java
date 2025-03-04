@@ -18,7 +18,7 @@ public class UserResponseDto {
     private String gstNumber;
     private UserStatusEnums status;
     private String countryCode;
-    private String rating;
+    private Double rating;
     private Boolean isApplicationAdmin;
     private UserRolesEnums userRole;
     List<AddressResponseDto> address;
