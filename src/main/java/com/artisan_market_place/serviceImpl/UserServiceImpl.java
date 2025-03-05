@@ -97,9 +97,9 @@ public class UserServiceImpl implements UserService {
     public List<UserResponseDto> getAllUser(Boolean isApplicationAdmin,String loginUser) {
         List<Users> usersList = userRepository.findAll();
         return usersList.stream()
-                .filter(user -> isApplicationAdmin == null || user.getIsAdmin().equals(isApplicationAdmin))
-                .map(this::getUserDetails)
-                .collect(Collectors.toList());
+        .filter(user -> isApplicationAdmin == null || user.getIsAdmin().equals(isApplicationAdmin))
+        .map(this::getUserDetails)
+        .collect(Collectors.toList());
     }
 
     public HashMap<String, String> sendVerificationOtpToUser(String email,String phonNumber) throws IOException {
@@ -113,14 +113,14 @@ public class UserServiceImpl implements UserService {
         String subject = NotificationConstant.USER_OTP_SUBJECT;
         String otpContent = String.format(MessageConstants.VERIFICATION_OTP_CONTENT, otp);
         try {
-            sendGridApiService.sendEmail(user.getEmail(), subject, otpContent,user.getUserId());
+        sendGridApiService.sendEmail(user.getEmail(), subject, otpContent,user.getUserId());
         } catch (Exception e) {
-            log.info (MessageConstants.ERRROR_SENDING_EMAIL,e.getMessage());
+        log.info (MessageConstants.ERRROR_SENDING_EMAIL,e.getMessage());
         }
         try {
-            twilioService.sendSms(user.getUserId(),subject,email, phoneNumber, otpContent);
+        twilioService.sendSms(user.getUserId(),subject,email, phoneNumber, otpContent);
         } catch (Exception e) {
-            log.info (MessageConstants.ERROR_SENDING_SMS,e.getMessage());
+        log.info (MessageConstants.ERROR_SENDING_SMS,e.getMessage());
         }
         HashMap<String, String> response = new HashMap<>();
         response.put("message", "OTP sent successfully.");
