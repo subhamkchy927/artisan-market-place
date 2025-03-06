@@ -66,7 +66,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional(rollbackFor = Throwable.class)
     public UserResponseDto updateUser(UserRequestDto dto, Long userId,String loginUser) {
         Users user = userValidator.validateUserIdAndReturn(userId);
         userValidator.validateUpdateUserRequest(userId,dto);
