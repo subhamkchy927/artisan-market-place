@@ -102,6 +102,7 @@ public class UserServiceImpl implements UserService {
         .collect(Collectors.toList());
     }
 
+    @Override
     public HashMap<String, String> sendVerificationOtpToUser(String email,String phonNumber) throws IOException {
         Users user = userRepository.findByEmailOrPhoneNumber(email,phonNumber);
         if (user == null) throw new ResourceNotFoundException(MessageConstants.USER_NOT_FOUND);
@@ -127,6 +128,7 @@ public class UserServiceImpl implements UserService {
         return response;
     }
 
+    @Override
     public HashMap<String, String> verifyUserOtp(String email,String phonNumber, String otp) {
         Users user = userRepository.findByEmailOrPhoneNumber(email,phonNumber);
         if (user == null) throw new ResourceNotFoundException(MessageConstants.USER_NOT_FOUND);
@@ -141,11 +143,14 @@ public class UserServiceImpl implements UserService {
         return response;
     }
 
+    @Override
     public HashMap<String, String> resetUserPassword(ResetPasswordRequestDto request,Boolean isForgot) {
         UsersLoginInfo userLoginInfo = usersLoginInfoRepository.findByLoginId(request.getEmail());
         if (userLoginInfo == null) throw new ResourceNotFoundException(MessageConstants.USER_NOT_FOUND);
-        if(!isForgot && !encoder.matches(request.getOldPassword(), userLoginInfo.getPassword())) throw new ValidationException(MessageConstants.INVALID_OLD_PASSWORD);
-        if (!request.getNewPassword().equals(request.getConfirmPassword())) throw new ValidationException(MessageConstants.PASSWORD_MISMATCH);
+        if (!isForgot && !encoder.matches(request.getOldPassword(), userLoginInfo.getPassword()))
+            throw new ValidationException(MessageConstants.INVALID_OLD_PASSWORD);
+        if (!request.getNewPassword().equals(request.getConfirmPassword()))
+            throw new ValidationException(MessageConstants.PASSWORD_MISMATCH);
         userLoginInfo.setPassword(encoder.encode(request.getNewPassword()));
         usersLoginInfoRepository.save(userLoginInfo);
         HashMap<String, String> response = new HashMap<>();
