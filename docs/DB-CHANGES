@@ -175,3 +175,5 @@ CREATE TABLE notification_details (
 ALTER TABLE user_login_info ADD COLUMN last_otp VARCHAR(4);
 
 ALTER TABLE product_images ADD COLUMN image_name VARCHAR(128);
+
+ALTER TABLE user_details ADD COLUMN address_id INT;
