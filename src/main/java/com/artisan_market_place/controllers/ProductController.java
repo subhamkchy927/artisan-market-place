@@ -29,7 +29,7 @@ public class ProductController {
     public ResponseEntity<ProdcutResponseDto> createProduct(
             @RequestBody ProductRequestDto dto,
             @RequestHeader(value = "Authorization") String token) {
-        log.info("Creating product: {}", dto.getName());
+        log.info("Creating product: {}", dto);
         String loginUser = jwtUtil.extractUsername(token);
         ProdcutResponseDto response = productService.createProduct(dto, loginUser);
         return ResponseEntity.ok(response);
@@ -41,6 +41,7 @@ public class ProductController {
             @PathVariable Long productId,
             @RequestHeader(value = "Authorization") String token) {
         log.info("Updating product with ID: {}", productId);
+        log.info("Updating product with request: {}", dto);
         String loginUser = jwtUtil.extractUsername(token);
         ProdcutResponseDto response = productService.updateProduct(dto, productId, loginUser);
         return ResponseEntity.ok(response);

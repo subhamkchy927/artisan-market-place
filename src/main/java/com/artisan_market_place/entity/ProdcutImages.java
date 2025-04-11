@@ -17,5 +17,8 @@ public class ProdcutImages extends BaseEntity{
 
         @Column(name = "image_url", nullable = false, length = 500)
         private String imageUrl;
+
+        @Column(name = "image_name", nullable = false, length = 500)
+        private String imageName;
     }
 

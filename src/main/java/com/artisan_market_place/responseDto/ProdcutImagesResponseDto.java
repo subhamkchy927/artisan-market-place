@@ -7,4 +7,5 @@ public class ProdcutImagesResponseDto {
     private Long imageId;
     private Long productId;
     private String imageUrl;
+    private String imageName;
 }

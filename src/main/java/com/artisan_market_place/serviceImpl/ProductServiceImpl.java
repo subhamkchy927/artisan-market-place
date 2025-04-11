@@ -190,6 +190,7 @@ public class ProductServiceImpl implements ProdcuctService {
         ProdcutImages image = new ProdcutImages();
         image.setProductId(product.getProductId());
         image.setImageUrl(imgDto.getImageUrl());
+        image.setImageName(imgDto.getImageName());
         prodcutImage.add(image);
         return image;
         })
@@ -205,6 +206,7 @@ public class ProductServiceImpl implements ProdcuctService {
         ProdcutImagesResponseDto image = new ProdcutImagesResponseDto();
         image.setProductId(product.getProductId());
         image.setImageUrl(imgDto.getImageUrl());
+        image.setImageName(imgDto.getImageName());
         return image;
         })
         .collect(Collectors.toList());

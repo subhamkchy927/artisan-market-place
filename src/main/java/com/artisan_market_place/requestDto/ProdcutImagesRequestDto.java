@@ -7,4 +7,5 @@ import lombok.Data;
 public class ProdcutImagesRequestDto {
     private Long productId;
     private String imageUrl;
+    private String imageName;
 }

@@ -173,3 +173,5 @@ CREATE TABLE notification_details (
     CONSTRAINT fk_user_notification FOREIGN KEY (user_id) REFERENCES user_details(user_id) ON DELETE CASCADE);
 
 ALTER TABLE user_login_info ADD COLUMN last_otp VARCHAR(4);
+
+ALTER TABLE product_images ADD COLUMN image_name VARCHAR(128);
