@@ -5,6 +5,7 @@ import com.artisan_market_place.entity.ProductOffers;
 import com.artisan_market_place.entity.Products;
 import com.artisan_market_place.entity.Users;
 import com.artisan_market_place.enums.BookingStatusEnums;
+import com.artisan_market_place.enums.PaymentStatusEnum;
 import com.artisan_market_place.repository.BookingRepository;
 import com.artisan_market_place.repository.ProductOffersRepository;
 import com.artisan_market_place.repository.ProductsRepositoryImpl;
@@ -67,7 +68,7 @@ public class BookingServiceImpl implements BookingService {
         booking.setDeliveryAddressId(dto.getDeliveryAddressId());
         booking.setStatus(BookingStatusEnums.PENDING);
         booking.setPaymentMethod(dto.getPaymentMethod());
-        booking.setPaymentStatus("PENDING");
+        booking.setPaymentStatus(PaymentStatusEnum.UNPAID);
         booking.setNotes(dto.getNotes());
         booking.setAuditInfo(loginUser);
         
@@ -187,7 +188,7 @@ public class BookingServiceImpl implements BookingService {
         }
         
         booking.setStatus(BookingStatusEnums.CONFIRMED);
-        booking.setPaymentStatus("PAID");
+        booking.setPaymentStatus(PaymentStatusEnum.PAID);
         booking.setAuditInfo(loginUser);
         bookingRepository.save(booking);
         
@@ -234,7 +235,7 @@ public class BookingServiceImpl implements BookingService {
         response.setDeliveryAddressId(booking.getDeliveryAddressId());
         response.setStatus(booking.getStatus().toString());
         response.setPaymentMethod(booking.getPaymentMethod());
-        response.setPaymentStatus(booking.getPaymentStatus());
+        response.setPaymentStatus(booking.getPaymentStatus().toString());
         response.setNotes(booking.getNotes());
         response.setCreationDate(booking.getCreationDate());
         response.setLastUpdateDate(booking.getLastUpdateDate());
@@ -278,19 +279,15 @@ public class BookingServiceImpl implements BookingService {
         
         BigDecimal maxDiscount = BigDecimal.ZERO;
         for (ProductOffers offer : activeOffers) {
-            // Check customer type if specified
-            if (offer.getCustomerType() != null && !offer.getCustomerType().isEmpty()) {
-                // You can add logic here to match customer type
-            }
-            
-            // Check minimum purchase amount
+
+            // minimum purchase amount
             if (offer.getMinPurchaseAmount() != null && totalPrice.compareTo(offer.getMinPurchaseAmount()) < 0) {
                 continue;
             }
             
             BigDecimal discount = BigDecimal.ZERO;
             
-            // Calculate percentage discount
+            // percentage discount
             if (offer.getPercentageDiscount() != null && offer.getPercentageDiscount() > 0) {
                 discount = totalPrice.multiply(BigDecimal.valueOf(offer.getPercentageDiscount()).divide(BigDecimal.valueOf(100)));
                 if (offer.getMaxDiscountAmount() != null && discount.compareTo(offer.getMaxDiscountAmount()) > 0) {
@@ -298,7 +295,7 @@ public class BookingServiceImpl implements BookingService {
                 }
             }
             
-            // Calculate flat discount
+            // flat discount
             if (offer.getFlatDiscount() != null && offer.getFlatDiscount().compareTo(BigDecimal.ZERO) > 0) {
                 BigDecimal flatDiscount = offer.getFlatDiscount();
                 if (discount.compareTo(flatDiscount) < 0) {

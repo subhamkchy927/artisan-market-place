@@ -1,6 +1,7 @@
 package com.artisan_market_place.entity;
 
 import com.artisan_market_place.enums.BookingStatusEnums;
+import com.artisan_market_place.enums.PaymentStatusEnum;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -59,8 +60,9 @@ public class Booking extends BaseEntity {
     @Column(name = "payment_method")
     private String paymentMethod;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "payment_status")
-    private String paymentStatus;
+    private PaymentStatusEnum paymentStatus;
 
     @Column(name = "notes", length = 1000)
     private String notes;
