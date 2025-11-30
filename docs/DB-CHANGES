@@ -114,16 +114,18 @@ CREATE TABLE products (
 DROP TABLE IF EXISTS product_reviews;
 CREATE TABLE product_reviews (
     review_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    product_id BIGINT NOT NULL,
+    prodcut_id BIGINT NOT NULL,
+    customer_id BIGINT NULL,
     reviews TEXT NOT NULL,
     reviews_count INT NOT NULL,
     ratings DECIMAL(2,1) NOT NULL,
-    ratings_count INT NOT NULL,
+    ratings_count DOUBLE NOT NULL,
     creation_date DATETIME NOT NULL,
     created_by VARCHAR(128),
     last_update_date DATETIME NOT NULL,
     last_updated_by VARCHAR(128),
-    CONSTRAINT fk_product_reviews_product FOREIGN KEY (product_id) REFERENCES products(product_id) ON DELETE CASCADE);
+    CONSTRAINT fk_product_reviews_product FOREIGN KEY (prodcut_id) REFERENCES products(product_id) ON DELETE CASCADE,
+    CONSTRAINT fk_product_reviews_customer FOREIGN KEY (customer_id) REFERENCES user_details(user_id) ON DELETE CASCADE);
 
 DROP TABLE IF EXISTS product_images;
 CREATE TABLE product_images (
@@ -145,9 +147,9 @@ CREATE TABLE product_offers (
     offer_name VARCHAR(255) NOT NULL,
     offer_description TEXT NOT NULL,
     percentage_discount DOUBLE NULL,
-    flat_discount DECIMAL(2,1) NULL,
-    max_discount_amount DECIMAL(2,1) NULL,
-    min_purchase_amount DECIMAL(2,1) NULL,
+    flat_discount DECIMAL(10,2) NULL,
+    max_discount_amount DECIMAL(10,2) NULL,
+    min_purchase_amount DECIMAL(10,2) NULL,
     start_date DATETIME NOT NULL,
     end_date DATETIME NOT NULL,
     offer_status VARCHAR(50) NOT NULL,
@@ -171,6 +173,35 @@ CREATE TABLE notification_details (
     last_update_date DATETIME NOT NULL,
     last_updated_by VARCHAR(128),
     CONSTRAINT fk_user_notification FOREIGN KEY (user_id) REFERENCES user_details(user_id) ON DELETE CASCADE);
+
+DROP TABLE IF EXISTS bookings;
+CREATE TABLE bookings (
+    booking_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    product_id BIGINT NOT NULL,
+    customer_id BIGINT NOT NULL,
+    seller_id BIGINT NOT NULL,
+    delivery_person_id BIGINT NULL,
+    quantity INT NOT NULL,
+    unit_price DECIMAL(10,2) NOT NULL,
+    total_price DECIMAL(10,2) NOT NULL,
+    discount_amount DECIMAL(10,2) NULL,
+    final_price DECIMAL(10,2) NOT NULL,
+    booking_date DATETIME NOT NULL,
+    delivery_date DATETIME NULL,
+    delivery_address_id BIGINT NOT NULL,
+    status VARCHAR(32) NOT NULL,
+    payment_method VARCHAR(50) NULL,
+    payment_status VARCHAR(50) NULL,
+    notes VARCHAR(1000) NULL,
+    creation_date DATETIME NOT NULL,
+    created_by VARCHAR(128),
+    last_update_date DATETIME NOT NULL,
+    last_updated_by VARCHAR(128),
+    CONSTRAINT fk_booking_product FOREIGN KEY (product_id) REFERENCES products(product_id) ON DELETE CASCADE,
+    CONSTRAINT fk_booking_customer FOREIGN KEY (customer_id) REFERENCES user_details(user_id) ON DELETE CASCADE,
+    CONSTRAINT fk_booking_seller FOREIGN KEY (seller_id) REFERENCES user_details(user_id) ON DELETE CASCADE,
+    CONSTRAINT fk_booking_delivery_person FOREIGN KEY (delivery_person_id) REFERENCES user_details(user_id) ON DELETE SET NULL,
+    CONSTRAINT fk_booking_delivery_address FOREIGN KEY (delivery_address_id) REFERENCES admin_address(address_id) ON DELETE CASCADE);
 
 ALTER TABLE user_login_info ADD COLUMN last_otp VARCHAR(4);
 

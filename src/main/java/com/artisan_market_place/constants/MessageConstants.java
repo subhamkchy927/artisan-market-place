@@ -70,5 +70,37 @@ public class MessageConstants {
     public static final String PRODUCT_ALREADY_EXISTS = "A product with the same values already exists.";
     public static final String ONLY_ADMIN_SELLER_CAN_ADD_UPDATE_PRODUCT = "Only Admin, Seller, or Seller-Customer can add or update a product.";
     public static final String PRODUCT_NOT_FOUND = "Product not found.";
+    
+    // Booking constants
+    public static final String BOOKING_OBJECT_NULL = "Booking object cannot be null.";
+    public static final String PRODUCT_ID_MANDATORY = "Product ID is mandatory.";
+    public static final String CUSTOMER_ID_MANDATORY = "Customer ID is mandatory.";
+    public static final String BOOKING_QUANTITY_INVALID = "Booking quantity must be greater than zero.";
+    public static final String DELIVERY_ADDRESS_ID_MANDATORY = "Delivery address ID is mandatory.";
+    public static final String INSUFFICIENT_STOCK = "Insufficient stock available for this product.";
+    public static final String ONLY_CUSTOMER_CAN_BOOK = "Only customers can create bookings.";
+    public static final String BOOKING_NOT_FOUND = "Booking not found.";
+    public static final String CANNOT_UPDATE_COMPLETED_BOOKING = "Cannot update a completed or delivered booking.";
+    public static final String CANNOT_CANCEL_COMPLETED_BOOKING = "Cannot cancel a completed or delivered booking.";
+    public static final String BOOKING_ALREADY_CANCELLED = "Booking is already cancelled.";
+    
+    // Offer constants
+    public static final String OFFER_OBJECT_NULL = "Offer object cannot be null.";
+    public static final String OFFER_NAME_MANDATORY = "Offer name is mandatory.";
+    public static final String OFFER_DESCRIPTION_MANDATORY = "Offer description is mandatory.";
+    public static final String OFFER_START_DATE_MANDATORY = "Offer start date is mandatory.";
+    public static final String OFFER_END_DATE_MANDATORY = "Offer end date is mandatory.";
+    public static final String OFFER_END_DATE_BEFORE_START = "Offer end date must be after start date.";
+    public static final String OFFER_NOT_FOUND = "Offer not found.";
+    public static final String INVALID_DISCOUNT_AMOUNT = "Discount amount must be greater than zero.";
+    public static final String INVALID_PERCENTAGE_DISCOUNT = "Percentage discount must be between 0 and 100.";
+    
+    // Review constants
+    public static final String REVIEW_OBJECT_NULL = "Review object cannot be null.";
+    public static final String REVIEW_TEXT_MANDATORY = "Review text is mandatory.";
+    public static final String RATING_MANDATORY = "Rating is mandatory.";
+    public static final String RATING_INVALID = "Rating must be between 1 and 5.";
+    public static final String REVIEW_NOT_FOUND = "Review not found.";
+    public static final String CUSTOMER_MUST_HAVE_BOOKING = "Customer must have a completed booking to review a product.";
 
 }

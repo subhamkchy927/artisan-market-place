@@ -15,6 +15,9 @@ public class ProdcutReviews {
     @Column(name = "prodcut_id")
     private Long prodcutId;
 
+    @Column(name = "customer_id")
+    private Long customerId;
+
     @Column(name = "reviews", nullable = false)
     private String reviews;
 
